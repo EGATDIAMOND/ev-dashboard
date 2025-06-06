@@ -1,0 +1,2105 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>EV Station Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+</head>
+<body>
+
+<div id="modalBackdrop" class="modal-backdrop"></div>
+<div class="station-modal" id="stationModal">
+    <div class="station-modal-content">
+        <span class="close-modal" onclick="closeStationModal()">&times;</span>
+
+        <div class="modal-grid">
+            <img id="stationImage" src="" alt="Station Image" />
+
+            <div class="modal-info">
+                <h2 id="stationName"></h2>
+
+                <div class="status-container">
+                    <div class="status-card-modal">
+                        <span class="material-icons status-icon">cloud_done</span>
+                        <span class="status-led-icon" id="statusEdgeboxLed"></span>  <div class="status-info">
+                            <p class="status-label">Edgebox</p>
+                            <p class="status-value" id="statusEdgebox">-</p>
+                            <small class="status-update" id="statusEdgeboxUpdate">อัปเดตเมื่อ -</small>
+                        </div>
+                    </div>
+
+                    <div class="status-card-modal">
+                        <span class="material-icons status-icon">memory</span>
+                        <span class="status-led-icon" id="statusPi5Led"></span>      <div class="status-info">
+                            <p class="status-label">PI5</p>
+                            <p class="status-value" id="statusPi5">-</p>
+                            <small class="status-update" id="statusPi5Update">อัปเดตเมื่อ -</small>
+                        </div>
+                    </div>
+
+
+
+                    <div class="status-card-modal">
+                      <span class="material-icons status-icon">power</span>
+                      <div class="status-info">
+                        <p class="status-label">Power Module</p>
+                    
+                        <!-- ค่า PM -->
+                        <p class="status-value" style="display: flex; gap: 1rem; align-items: center;">
+                          <span id="pm1-value" class="pm-value">-</span> | 
+                          <span id="pm2-value" class="pm-value">-</span>
+                        </p>
+                    
+                        <!-- timestamp -->
+                        <small class="status-update" id="timestamp1">อัปเดตเมื่อ -</small>
+                        <small class="status-update" id="timestamp2">อัปเดตเมื่อ -</small>
+                      </div>
+                    </div>
+                    
+
+
+                    
+
+
+
+                    <div class="status-card-modal">
+                        <span class="material-icons status-icon">thermostat</span>
+                        <span class="status-led-icon" id="statusTempLed"></span>      <div class="status-info">
+                            <p class="status-label">Temperature</p>
+                            <p class="status-value"><span id="stationTemp">-</span></p>
+                        </div>
+                    </div>
+
+
+                    <div class="status-card-modal">
+                      <span class="material-symbols-outlined" style="font-size: 28px; color: #f9a825; margin-bottom: 6px;">
+                        mode_fan
+                      </span>
+                      <!--<span class="status-led-icon" id="statusFanLed"></span>-->
+                      <div class="status-info">
+                        <p class="status-label">Fan</p>
+                        <p class="status-value"><span id="stationFanType">ชนิดพัดลม -</span></p>
+                        <!--<small class="status-update" id="fanTypeTimestamp">อัปเดตเมื่อ -</small> -->
+                      </div>
+                    </div>
+
+
+
+                    <div class="status-card-modal">
+                        <span class="material-icons status-icon">bolt</span>
+                        <span class="status-led-icon" id="statusVoltageLed"></span>  <div class="status-info">
+                            <!--<p class="status-label">Voltage</p>-->
+                            <p class="status-value">
+                              <span id="stationVoltage1" style="color: #999999;"> Coming soon... </span>
+                            </p>
+                            <!--<small class="status-update">อัปเดตเมื่อ -</small>-->
+                        </div>
+                    </div>
+
+
+                    
+
+
+                </div>
+                </div>
+        </div>
+    </div>
+</div>
+<button id="openPanelBtn" class="open-panel-button" style="display: none;">
+  <i class="fas fa-chevron-right"></i>
+</button>
+
+<div class="status-toggle-panel" id="statusPanel">
+
+  <div class="status-header">
+  <span class="status-title">📍 Station Status</span>
+  <button id="togglePanelBtn" type="button" title="ซ่อน/แสดง Panel">
+    <i class="fas fa-chevron-left" id="toggleIcon"></i>
+  </button>
+</div>
+
+
+  <div class="status-body">
+    <div class="status-panel-section">
+      <h4>Edgebox</h4>
+      <ul id="edgeboxList" class="status-list"></ul>
+    </div>
+    <div class="status-panel-section">
+      <h4>PI5</h4>
+      <ul id="pi5List" class="status-list"></ul>
+    </div>
+    <div class="status-panel-section">
+      <h4>Power Module</h4>
+      <ul id="pmList" class="status-list"></ul>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<nav class="container-fluid top-nav">
+  <ul class="nav-info-group">
+    <li class="brand-title">EGAT Diamond Service</li>
+    <li class="vertical-sep">|</li>
+    <li class="station-summary">
+      <span class="green-led-bullet"></span>
+      <span class="station-label">สถานีทั้งหมด:</span>
+      <span id="totalStations" class="station-count">0</span>
+    </li>
+  </ul>
+
+  <ul class="nav-action-group">
+    <li class="search-wrapper">
+      <div class="search-box">
+        <input type="text" id="searchInput" placeholder="🔍 Search station name..." autocomplete="off" />
+        <ul id="searchSuggestions" class="suggestions-list"></ul>
+      </div>
+    </li>
+
+    <li>
+  <div class="mini-status-box">
+    <div class="mini-status-item">
+      <div class="mini-icon-only"><span class="material-icons">cloud_off</span></div>
+      <span class="mini-label">Edgebox</span>
+      <span class="mini-value clickable" id="offlineEdgebox" onclick="showOfflineModal('edgebox')">0</span>
+    </div>
+
+    <div class="mini-status-item">
+      <div class="mini-icon-only"><span class="material-icons">memory</span></div>
+      <span class="mini-label">PI5</span>
+      <span class="mini-value clickable" id="offlinePi5" onclick="showOfflineModal('pi5')">0</span>
+    </div>
+
+    <div class="mini-status-item">
+      <div class="mini-icon-only"><span class="material-icons">power</span></div>
+      <span class="mini-label">Power</span>
+      <span class="mini-value clickable" id="offlinePm" onclick="showOfflineModal('power')">0</span>
+    </div>
+  </div>
+</li>
+
+    <li>
+      <div class="notify-container">
+        <button id="notifyBtn" class="icon-button no-hover">
+          <span class="material-icons">notifications</span>
+          <span id="notifyCount" class="badge">0</span>
+        </button>
+        <ul id="notifyDropdown" class="notify-dropdown" style="display:none;"></ul>
+      </div>
+    </li>
+
+    <li>
+      <img src="images/egat.gif" alt="Company Logo" style="height: 48px;" />
+    </li>
+  </ul>
+</nav>
+
+<!-- เพิ่มไว้ที่ด้านล่างสุดของ <body> -->
+<div id="offlineModal" class="station-modal" style="display: none;">
+  <div class="station-modal-content">
+    <span class="close-modal" onclick="closeOfflineModal()">&times;</span>
+    <h3>รายการสถานี Offline</h3>
+    <ul id="offlineList"></ul>
+  </div>
+</div>
+
+
+  <main class="container">
+    <div class="grid">
+      <section>
+        <hgroup>
+          <h2>EV Station Overview</h2>
+          <h3>Real-time monitoring & service availability tracking</h3>
+        </hgroup>
+
+        <div id="fullscreenMapContainer">
+  <div id="map"></div>
+</div>
+      </section>
+
+      <!--<aside class="fade-in">
+        <div class="search-box">
+          <input type="text" id="searchInput" placeholder="🔍 Search station name..." />
+          <ul id="searchSuggestions" class="suggestions-list"></ul>
+        </div>-->
+
+        <!--<div class="logo-row">
+          <img src="images/flexfast.png" alt="logo1">
+          <img src="images/pt.png" alt="logo2">
+          <img src="images/elx.png" alt="logo3">
+        </div>
+      </aside>-->
+    </div>
+  </main>
+
+  <footer class="app-footer">
+  <small class="footer-text">
+    <a href="#">EGAT Diamond Service</a> • <a href="#">2025</a>
+  </small>
+  <div class="footer-logo-row">
+    <img src="images/flexfast.png" alt="logo1" />
+    <img src="images/pt.png" alt="logo2" />
+    <img src="images/elx.png" alt="logo3" />
+  </div>
+</footer>
+
+
+
+
+    <script>
+        const map = L.map('map').setView([13.682, 100.601], 13);
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> & Carto',
+  subdomains: 'abcd',
+  maxZoom: 19
+}).addTo(map);
+
+        const defaultEvChargers = [ 
+{ id: 1, lat: 13.352721252871506, lng: 99.88276004560078, topic: 'OCPP/amphawa/heartbeat', name: 'Amphawa' },
+{ id: 2, lat: 14.302132, lng: 100.526131, topic: 'OCPP/PT100_Ayuthaya3/heartbeat', name: 'Ayuthaya 3' },
+{ id: 3, lat: 13.23388810231634, lng: 101.14768981011092, topic: 'OCPP/Banbueng1_DC_1/heartbeat', name: 'Banbueng 1' },
+{ id: 4, lat: 13.328741, lng: 101.117898, topic: 'OCPP/Banbueng9_DC_1/heartbeat', name: 'Banbueng 9' },
+{ id: 5, lat: 13.326909246284803, lng: 101.09030035753644, topic: 'OCPP/PT100_Banbueng10/heartbeat', name: 'Banbueng 10' },
+{ id: 6, lat: 8.938552, lng: 99.260043, topic: 'OCPP/BanNaDoem/heartbeat', name: 'BanNaDoem' },
+{ id: 7, lat: 12.867503, lng: 101.314573, topic: 'OCPP/Elex_DC_PT_BanKhai5_1/heartbeat', name: 'BanKhai 5' },
+{ id: 8, lat: 13.602523, lng: 101.094483, topic: 'OCPP/Elex_PT_BanPo3_1/heartbeat', name: 'BanPo 3' },
+{ id: 9, lat: 17.028676, lng: 99.092334, topic: 'OCPP/Elex_DC_PT_BanTak1_1/heartbeat', name: 'BanTak 1' },
+{ id: 10, lat: 15.981736, lng: 100.118626, topic: 'OCPP/EleX_PT100_BanphotPhisai3_DC_1/heartbeat', name: 'BanphotPhisai 3' },
+{ id: 11, lat: 13.88128, lng: 100.433517, topic: 'OCPP/EleX_PT100_BangBuaThong4_1/heartbeat', name: 'BangBuaThong 4' },
+{ id: 12, lat: 13.944302, lng: 100.428321, topic: 'OCPP/Elex_BangBuaThong9_1/heartbeat', name: 'BangBuaThong 9' },
+{ id: 13, lat: 13.77703390184574, lng: 102.20581975381121, topic: 'OCPP/EleX_PT100_BangBuaTong12_DC_1/heartbeat', name: 'BangBuaTong 12' },
+{ id: 14, lat: 14.115531046725593, lng: 100.57320479978755, topic: 'OCPP/PT100_BangKhla4/heartbeat', name: 'BangKhla 4' },
+{ id: 15, lat: 13.039247, lng: 100.926804, topic: 'OCPP/Elex_PT_Banglamuung11_1/heartbeat', name: 'Banglamuung 11' },
+{ id: 16, lat: 13.611766263085068, lng: 100.78179358935976, topic: 'OCPP/PT_BangnaTrad1/heartbeat', name: 'BangnaTrad 1' },
+{ id: 17, lat: 13.576753638446908, lng: 100.88842820962836, topic: 'OCPP/PT_BangnaTrad2/heartbeat', name: 'BangnaTrad 2' },
+{ id: 18, lat: 14.348318418164101, lng: 100.66894502663017, topic: 'OCPP/PT_BangPhain3/heartbeat',  name: 'BangPaIn3' },
+{ id: 19, lat: 14.485101, lng: 100.527037, topic: 'OCPP/Bangpahan/heartbeat', name: 'BangPahan' },
+{ id: 20, lat: 14.418853111118048, lng: 100.56771491680227, topic: 'OCPP/PT_BangPahan4/heartbeat', name: 'BangPahan 4' },
+{ id: 21, lat: 13.244049621204399, lng: 100.99552487995707, topic: 'OCPP/Bangpha/heartbeat', name: 'BangPhra 2' },
+{ id: 22, lat: 13.213910637894244, lng: 101.00595280965527, topic: 'OCPP/BangPhra3/heartbeat', name: 'BangPhra 3' },
+{ id: 23, lat: 13.598336352494199, lng: 100.43291325467597, topic: 'OCPP/BangKhunThian1/heartbeat', name: 'BangKhunThian 1' },
+{ id: 24, lat: 13.552782, lng: 100.956624, topic: 'OCPP/Elex_PT_Bangpakong_1/heartbeat', name: 'Bangpakong' },
+{ id: 25, lat: 13.566850565874807, lng: 101.0033103094851, topic: 'OCPP/PT100_Bangpokong2/heartbeat', name: 'Bangpokong 2' },
+{ id: 26, lat: 13.501320636702994, lng: 101.00346329007621, topic: 'OCPP/Bangpakong3/heartbeat', name: 'Bangpakong 3' },
+{ id: 27, lat: 16.400779, lng: 99.520537, topic: 'OCPP/Elex_PT_KamphaengPhet_1/heartbeat',       name: 'BPTG_KamphaengPhet' },
+{ id: 28, lat: 16.819898, lng: 99.130605, topic: 'OCPP/Elex_BPTG_Tak_1/heartbeat', name: 'BPTG_Tak' },
+{ id: 29, lat: 13.811782, lng: 100.650484, topic: 'OCPP/BuengKum3/heartbeat', name: 'BuengKum 3' },
+{ id: 30, lat: 13.696354, lng: 100.513674, topic: 'OCPP/EleX_CharoenRat_1/heartbeat',name: 'CharoenRat 1' },
+{ id: 31, lat: 13.746811152407773, lng: 100.79259620966788, topic: 'OCPP/Thanon_Chalong_Krung/heartbeat', name: 'ChalongKrung' },
+{ id: 32, lat: 13.768833, lng: 100.809728, topic: 'OCPP/Elex_ChalongKrung2_1/heartbeat', name: 'ChalongKrung 2' },
+{ id: 33, lat: 13.767839469049134, lng: 100.99084898631442, topic: 'OCPP/PT100_Chachoengsao9/heartbeat', name: 'Chachoengsao 9' },
+{ id: 34, lat: 13.67620815367132, lng: 101.0514260519947, topic: 'OCPP/Chachoengsao10/heartbeat', name: 'Chachoengsao 10' },
+{ id: 35, lat: 12.771552, lng: 101.841757, topic: 'OCPP/PT_Chanthaburi_1/heartbeat', name: 'Chanthaburi' },
+{ id: 36, lat: 15.679878089298963, lng: 101.98496818077902, topic: 'OCPP/PT_Chatturat/heartbeat', name: 'Chatturat' },
+{ id: 37, lat: 18.739768, lng:  98.957536, topic: 'OCPP/Chiangmai1/heartbeat', name: 'Chiangmai 1' },
+{ id: 38, lat: 19.871219, lng: 99.827075, topic: 'OCPP/Elex_PT_Chiangrai7_1/heartbeat', name: 'Chiangrai 7' },
+{ id: 39, lat: 14.258047932051248, lng: 100.7068023045144, topic: 'OCPP/W_N/heartbeat', name: 'EDS_Wangnoi' },
+{ id: 40, lat: 13.870838527762078, lng: 100.56710235037129, topic: 'OCPP/EGCO/heartbeat', name: 'EGCO' },
+{ id: 41, lat: 18.313902, lng: 99.383712, topic: 'OCPP/Elex_PT_Hangchat2_1/heartbeat', name: 'Hangchat 2' },
+{ id: 42, lat: 18.72035489111521, lng: 98.97153790186465, topic: 'OCPP/PT100_HangDong7/heartbeat', name: 'HangDong 7' },
+{ id: 43, lat: 16.643247, lng: 103.902771, topic: 'OCPP/PT_HuaiPhueng/heartbeat', name: 'HuaiPhueng' },
+{ id: 44, lat: 13.153547, lng: 100.983017, topic: 'OCPP/Parking_JPARK1/heartbeat', name: 'JPARK 1' },
+{ id: 45, lat: 14.054744, lng: 101.794214, topic: 'OCPP/PT_KabinBuri7/heartbeat', name: 'KabinBuri 7' },
+{ id: 46, lat: 13.976228, lng: 101.745591, topic: 'OCPP/Elex_PT_KabinBuri9_1/heartbeat', name: 'KabinBuri 9' },
+{ id: 47, lat: 16.3728,   lng: 99.546717, topic: 'OCPP/Elex_PT_KamphaengPhet2_1/heartbeat', name: 'KamphaengPhet 2' },
+{ id: 48, lat: 13.678056, lng: 100.407138, topic: 'OCPP/EleX_PT100_Kanchanapisek1_DC_1/heartbeat', name: 'Kanchanapisek 1' },
+{ id: 49, lat: 13.998182, lng: 100.44984, topic: 'OCPP/Kanchanapisek2/heartbeat', name: 'Kanchanapisek 2' },
+{ id: 50, lat: 13.997941, lng: 100.686284, topic: 'OCPP/PT_Klong4/heartbeat', name: 'Klong 4' },
+{ id: 51, lat: 12.779867, lng: 101.702293, topic: 'OCPP/PT100_Klaeng11_DC_1/heartbeat', name: 'Klaeng 11' },
+{ id: 52, lat: 12.822658519528511, lng:  101.630449451975, topic: 'OCPP/Klaeng12/heartbeat', name: 'Klaeng 12' },
+{ id: 53, lat: 14.065011406461565, lng: 100.62543469161788, topic: 'OCPP/PT100_Klongluang3/heartbeat', name: 'Klongluang 3' },
+{ id: 54, lat: 14.0491623709372, lng: 100.61677301363572, topic: 'OCPP/PT100_Klongluang4/heartbeat', name: 'Klongluang 4' },
+{ id: 55, lat: 14.120781941730534, lng: 100.6149816467824, topic: 'OCPP/PT100_Klongluang6/heartbeat', name: 'Klongluang 6' },
+{ id: 56, lat: 14.066543, lng: 100.672275, topic: 'OCPP/PT100_Klongluang10_DC_1/heartbeat', name: 'Klongluang 10' },
+{ id: 57, lat: 13.111386809119063, lng: 101.1507904523667, topic: 'OCPP/PT100_KhaoKhansong/heartbeat', name: 'Khaokhansong' },
+{ id: 58, lat: 15.573254499059248, lng: 100.1263437901285, topic: 'OCPP/PT100_KrokPhra2/heartbeat', name: 'KrokPhra 2' },
+{ id: 59, lat: 13.744492758968256, lng: 100.68292756951878, topic: 'OCPP/KrungthepKreetha2/heartbeat', name: 'KrungthepKreetha 2' },
+{ id: 60, lat: 12.117076755135919, lng: 99.85267272952147, topic: 'OCPP/KuiBuri/heartbeat', name: 'KuiBuri' },
+{ id: 61, lat: 12.695174, lng: 101.201043, topic: 'OCPP/KungPhatthana/heartbeat',  name: 'KungPhatthana' },
+{ id: 62, lat: 14.621046, lng: 101.090871, topic: 'OCPP/Elex_PT_KaengKhoi2_1/heartbeat', name: 'KaengKhoi 2' },
+{ id: 63, lat: 13.657656, lng:100.717638, topic: 'OCPP/Elex_KingKaew2_1/heartbeat', name: 'KingKaew 2' },
+{ id: 64, lat: 13.949767, lng: 100.809058, topic: 'OCPP/Elex_PT_LamLukKa8_1/heartbeat', name: 'LamLukKa 8' },
+{ id: 65, lat: 9.790426,  lng: 99.07548, topic: 'OCPP/Elex_PT_Lamae3_1/heartbeat', name: 'Lamae 3' },
+{ id: 66, lat: 13.909431, lng: 100.330305, topic: 'OCPP/Ladpladuk2/heartbeat', name: 'Ladpladuk 2' },
+{ id: 67, lat: 18.555409882511007, lng: 99.06109716282813, topic: 'OCPP/lamphun2/heartbeat', name: 'Lamphun 2' },
+{ id: 68, lat: 14.040889, lng: 100.477665, topic: 'OCPP/Elex_PT_LatLumKaeo6_1/heartbeat', name: 'LatLumKaeo 6' },
+{ id: 69, lat: 13.723027, lng: 100.74414, topic: 'OCPP/Elex_Latkrabang6_1/heartbeat', name: 'Latkrabang 6' },
+{ id: 70, lat: 13.352159636608588, lng: 100.98052771811444, topic: 'OCPP/LiangMuangChon1/heartbeat', name: 'LiangMuangChon 1' },
+{ id: 71, lat: 15.270834, lng: 100.198256, topic: 'OCPP/Elex_DC_PT_Manorom2_1/heartbeat', name: 'Manorom 2' },
+{ id: 72, lat: 20.130366, lng: 99.86453, topic: 'OCPP/Elex_DC_PT_MaeChan_1/heartbeat', name: 'MaeChan' },
+{ id: 73, lat: 16.09692812260758, lng: 103.2996698437596, topic: 'OCPP/MahaSarakham1/heartbeat', name: 'MahaSarakham 1' },
+{ id: 74, lat: 16.16203772465403, lng: 103.27849739649125, topic: 'OCPP/MahaSarakham2/heartbeat', name: 'MahaSarakham 2' },
+{ id: 75, lat: 16.164894, lng: 103.33249, topic: 'OCPP/PT_MahaSarakham/heartbeat', name: 'PT MahaSarakham' },
+{ id: 76, lat: 16.56484987381931, lng: 104.71547084752113, topic: 'OCPP/Mukdahan1/heartbeat', name: 'Mukdahan 1' },
+{ id: 77, lat: 13.802395, lng: 100.005455, topic: 'OCPP/PT_NakhonPathom9/heartbeat', name: 'NakhonPathom 9' },
+{ id: 78, lat: 16.6827328987663, lng: 102.80507390401658, topic: 'OCPP/NamPhong_1/heartbeat', name: 'NamPhong' },
+{ id: 79, lat: 14.40778, lng: 100.582832, topic: 'OCPP/NakhonLuang4/heartbeat', name: 'NakhonLuang 4' },
+{ id: 80, lat: 15.78457997315751, lng: 99.97097424834865, topic: 'OCPP/NakhonSawan2/heartbeat', name: 'NakhonSawan 2' },
+{ id: 81, lat: 14.979446349467626, lng: 102.08519563373702, topic: 'OCPP/PT100_NakhonRatchasima8/heartbeat', name: 'NakhonRatchasima 8' },
+{ id: 82, lat: 14.951645, lng: 102.122857, topic: 'OCPP/Elex_PT_Nakhonratchasima12_1/heartbeat', name: 'NakhonRatchasima 12' },
+{ id: 83, lat: 18.740974, lng: 99.974221, topic: 'OCPP/PT_Nhao_1/heartbeat', name: 'Nhao' },
+{ id: 84, lat: 14.75755708545043, lng: 102.32837676759135, topic: 'OCPP/PT_NONGBUNMAK2/heartbeat', name: 'NongBunMak 2' },
+{ id: 85, lat: 14.86899138616413, lng: 101.80534865202432, topic: 'OCPP/NONSUNG_3/heartbeat', name: 'NonSung 3' },
+{ id: 86, lat: 13.943034455333306, lng: 100.54131676687814, topic: 'OCPP/NonthaburiBridge/heartbeat', name: 'NonthaburiBridge' },
+{ id: 87, lat: 14.685523, lng: 102.533101, topic: 'OCPP/Elex_DC_PT_Nongki_1/heartbeat', name: 'Nongki' },
+{ id: 88, lat: 14.361136975885557, lng: 100.87751627007029, topic: 'OCPP/NongKgae1/heartbeat', name: 'NongKhae' },
+{ id: 89, lat: 14.36338023015933, lng:  100.87647063911461, topic: 'OCPP/PT100_NongKhae5/heartbeat', name: 'NongKhae 5' },
+{ id: 90, lat: 13.713275231780134, lng: 100.34421604092881, topic: 'OCPP/NongKhaem/heartbeat', name: 'NongKhaem' },
+{ id: 91, lat: 16.484905, lng: 102.552495, topic: 'OCPP/Elex_PT_NongRuea4_1/heartbeat', name: 'NongRuea 4' },
+{ id: 92, lat: 12.779342059833994, lng: 101.16510072128835, topic: 'OCPP/PT100_Nikompattana5/heartbeat', name: 'Nikompattana 5' },
+{ id: 93, lat: 13.87066856472023, lng: 100.73153684624465, topic: 'OCPP/PT100_NimitMai2_DC_1/heartbeat', name: 'NimitMai 2' },
+{ id: 94, lat: 19.350237121449087, lng: 98.43511413365715, topic: 'OCPP/Pai/heartbeat', name: 'Pai (Silhouette)' },
+{ id: 95, lat: 14.140498, lng: 100.617797, topic: 'OCPP/Elex_PT_PaIn1_1/heartbeat', name: 'PaIn 1' },
+{ id: 96, lat: 14.67487160294644, lng: 102.01631435294408, topic: 'OCPP/PakThongChai2/heartbeat', name: 'PakThongChai 2' },
+{ id: 97, lat: 14.635320296751438, lng: 101.2091328097687, topic: 'OCPP/PakChong2/heartbeat', name: 'PakChong 2' },
+{ id: 98, lat: 14.666856, lng: 101.426622, topic: 'OCPP/Elex_PakChong5_1/heartbeat', name: 'PakChong 5' },
+{ id: 99, lat: 14.624669, lng: 103.382589, topic: 'OCPP/Elex_DC_PT_Prasat6_1/heartbeat', name: 'Prasat 6' },
+{ id: 100, lat: 13.721023, lng: 100.684023, topic: 'OCPP/Elex_PT_Prawet4_1/heartbeat', name: 'Prawet 4' },
+{ id: 101, lat: 12.369467, lng: 99.886926, topic: 'OCPP/Elex_PT_Pranburi2_1/heartbeat', name: 'Pranburi 2' },
+{ id: 102, lat: 13.42193208203592, lng: 101.09895003702974, topic: 'OCPP/PT100_PhanThong3/heartbeat', name: 'PhanThong 3' },
+{ id: 103, lat: 13.567465, lng: 100.66235, topic: 'OCPP/Phraekkasa/heartbeat', name: 'Phraekkasa' },
+{ id: 104, lat: 13.757, lng: 100.677, topic: 'OCPP/Thanon_phartep/heartbeat', name: 'ThanonPhartep' },
+{ id: 105, lat: 13.751774569946786, lng: 101.36395236733932, topic: 'OCPP/PT100_PhanomSarakham2/heartbeat', name: 'PhanomSarakham 2' },
+{ id: 106, lat: 13.443920549028897, lng: 101.28272420411062, topic: 'OCPP/PhanatNikhom3/heartbeat', name: 'PhanatNikhom 3' },
+{ id: 107, lat: 13.52171, lng: 101.266168, topic: 'OCPP/Elex_DC_PT_PhanatNikhom7_1/heartbeat', name: 'PhanatNikhom 7' },
+{ id: 108, lat: 16.531932, lng: 101.15652, topic: 'OCPP/PT_Phetchabun1/heartbeat', name: 'Phetchabun 1' },
+{ id: 109, lat: 15.054653, lng: 100.968073, topic: 'OCPP/Phatthananikhom1/heartbeat', name: 'Phatthananikhom 1' },
+{ id: 110, lat: 14.805726, lng: 100.911349, topic: 'OCPP/Elex_PT_Phatthananikhom2_1/heartbeat', name: 'Phatthananikhom 2' },
+{ id: 111, lat: 16.760288039315032, lng: 100.18926350055871, topic: 'OCPP/PT100_Phitsanulok3/heartbeat', name: 'Phitsanulok 3' },
+{ id: 112, lat: 16.834666, lng: 100.36761, topic: 'OCPP/EleX_PT100_Phitsanulok5_DC_1/heartbeat', name: 'Phitsanulok 5' },
+{ id: 113, lat: 14.846339, lng: 100.446623, topic: 'OCPP/Elex_DC_PT_PhromBuri2_1/heartbeat', name: 'PhromBuri 2' },
+{ id: 114, lat: 17.09808011104428, lng: 100.3111670903953, topic: 'OCPP/PT100_PhromPhiram6/heartbeat', name: 'PhromPhiram 6' },
+{ id: 115, lat: 13.741909, lng: 100.364557, topic: 'OCPP/Phutthamonthon3/heartbeat', name: 'Phutthamonthon 3' },
+{ id: 116, lat: 13.731878, lng: 100.330089, topic: 'OCPP/Elex_PT_Phutthamonthon4_1/heartbeat', name: 'Phutthamonthon 4' },
+{ id: 117, lat: 13.724337786201984, lng: 100.29948590812803, topic: 'OCPP/Phutthamonthon5/heartbeat', name: 'Phutthamonthon 5' },
+{ id: 118, lat: 13.934542, lng: 100.455652, topic: 'OCPP/EleX_Ratchaphruek_DC_1/heartbeat', name: 'Ratchaphruek' },
+{ id: 119, lat: 13.493504, lng: 99.795034, topic: 'OCPP/PT_Ratchaburi_7/heartbeat', name: 'Ratchaburi 7' },
+{ id: 120, lat: 13.840507680068312, lng: 100.63902372316288, topic: 'OCPP/EleX_RamInthra40_1/heartbeat', name: 'RamInthra 40' },
+{ id: 121, lat: 13.568915, lng: 100.284087, topic: 'OCPP/Elex_Rama2km26_1/heartbeat', name: 'Rama2km26' },
+{ id: 122, lat: 13.453345, lng: 100.084075, topic: 'OCPP/Elex_Rama2km53_1/heartbeat', name: 'Rama2km53' },
+{ id: 123, lat: 18.672564724903292, lng: 99.0532065356562, topic: 'OCPP/Saraphi2/heartbeat', name: 'Saraphi 2' },
+{ id: 124, lat: 14.622008202514767, lng: 103.841781018967, topic: 'OCPP/PT_Sangkha3/heartbeat', name: 'Sangkha 3' },
+{ id: 125, lat: 12.323339, lng: 99.878464, topic: 'OCPP/Elex_DC_PT_SamRoiYot1_1/heartbeat', name: 'SamRoiYot 1' },
+{ id: 126, lat: 13.439419, lng: 100.064672, topic: 'OCPP/Elex_Samutsongkhram4_1/heartbeat', name: 'Samutsongkhram 4' },
+{ id: 127, lat: 13.775102, lng: 100.70622, topic: 'OCPP/EleX_PT100_SaphanSung_DC_1/heartbeat', name: 'SaphanSung' },
+{ id: 128, lat: 14.108897, lng: 100.570733, topic: 'OCPP/Elex_PT_SamKhok3_1/heartbeat', name: 'SamKhok 3' },
+{ id: 129, lat: 13.5172, lng: 100.673492, topic: 'OCPP/EleX_Samutprakan2_DC_1/heartbeat', name: 'Samutprakan 2' },
+{ id: 130, lat: 13.564018, lng: 100.694714, topic: 'OCPP/PT100_Samutprakan5_DC_1/heartbeat', name: 'Samutprakan 5' },
+{ id: 131, lat: 18.78492962968189, lng: 99.0704154921693, topic: 'OCPP/PT100_SanKamphaeng6/heartbeat', name: 'SanKamphaeng 6' },
+{ id: 132, lat: 18.854566060789736, lng: 99.06618401182531, topic: 'OCPP/SanSai4/heartbeat', name: 'Sansai 4' },
+{ id: 133, lat: 13.820473, lng: 100.740476, topic: 'OCPP/Elex_SuwinthawonKm28_1/heartbeat',  name: 'SuwinthawonKm28' },
+{ id: 134, lat: 15.229897, lng: 104.97777, topic: 'OCPP/Elex_DC_PT_Swangweerawong_1/heartbeat', name: 'Swangweerawong 1' },
+{ id: 135, lat: 14.846877, lng: 101.632708, topic: 'OCPP/PT_Sikhio1/heartbeat', name: 'Sikhio 1' },
+{ id: 136, lat: 14.846877, lng: 101.632708, topic: 'OCPP/EleX_PT100_Sikhio6_1/heartbeat', name: 'Sikhio 6' },
+{ id: 137, lat: 13.097697851067519, lng: 101.10672537306002, topic: 'OCPP/PT100_Siracha7/heartbeat', name: 'Siracha 7' },
+{ id: 138, lat: 13.14286166528787, lng: 101.16348110991096, topic: 'OCPP/Siracha8/heartbeat', name: 'Siracha 8' },
+{ id: 139, lat: 14.399794, lng: 99.121815, topic: 'OCPP/SNR/heartbeat', name: 'SNR' },
+{ id: 140, lat: 17.916635217270695, lng: 99.33920184699252, topic: 'OCPP/PT100_SopPrap_DC_1/heartbeat', name: 'SopPrap' },
+{ id: 141, lat: 13.884262, lng: 100.523816, topic: 'OCPP/EleX_TaSai2_1/heartbeat', name: 'TaSai 2' },
+{ id: 142, lat: 16.877944, lng: 99.13002, topic: 'OCPP/EleX_PT100_Tak2_1/heartbeat', name: 'Tak 2' },
+{ id: 143, lat: 12.639849, lng: 101.389892, topic: 'OCPP/Taphong3/heartbeat', name: 'Taphong 3' },
+{ id: 144, lat: 13.91202, lng: 99.770266, topic: 'OCPP/Elex_DC_PT_ThaMaka3_1/heartbeat', name: 'ThaMaka 3' },
+{ id: 145, lat: 13.752649448739792, lng: 100.78271375227439, topic: 'OCPP/ThanonChaoKhunThahan3/heartbeat', name: 'ThanonChaoKhunThahan 3' },
+{ id: 146, lat: 13.824995, lng: 100.758588, topic: 'OCPP/Elex_PT100_ThanonRatUthit2_1/heartbeat', name: 'ThanonRatUthit 2' },
+{ id: 147, lat: 13.438044289844246, lng: 101.03193461604367, topic: 'OCPP/PT100_ThanonSukprayu1/heartbeat', name: 'ThanonSukprayu 1' },
+{ id: 148, lat: 13.675067, lng: 100.47076, topic: 'OCPP/ThanonPhutthaBucha1/heartbeat', name: 'ThanonPhutthaBucha 1' },
+{ id: 149, lat: 13.709852937333547, lng: 100.51576673925344, topic: 'OCPP/Thanon_Chan/heartbeat', name: 'ThanonChan' },
+{ id: 150, lat: 13.604519, lng:  100.694392, topic: 'OCPP/EleX_Thepharak2_DC_1/heartbeat', name: 'Thepharak 2' },
+{ id: 151, lat: 13.633459048613307, lng:100.61716303635656, topic: 'OCPP/Thepharak4/heartbeat', name: 'Thepharak 4' },
+{ id: 152, lat: 17.61820312580882, lng: 99.23229115210151, topic: 'OCPP/PT100_Thoen3/heartbeat', name: 'Thoen 3' },
+{ id: 153, lat: 10.131046, lng: 99.091571, topic: 'OCPP/Elex_Thungtako1_1/heartbeat', name: 'Thungtako 1' },
+{ id: 154, lat: 17.311119, lng: 102.851246, topic: 'OCPP/PT_UdonThani_1/heartbeat', name: 'UdonThani 5' },
+{ id: 155, lat: 17.589989626684694, lng: 100.1623372566302, topic: 'OCPP/PT100_Uttaradit/heartbeat', name: 'Uttaradit' },
+{ id: 156, lat: 14.322461, lng: 100.632315, topic: 'OCPP/PT_UThai/heartbeat', name: 'UThai' },
+{ id: 157, lat: 13.830301807856742, lng: 100.55848446296385, topic: 'OCPP/Vibhavadi/heartbeat', name: 'VibhavadiRangsit 1' },
+{ id: 158, lat: 16.477536, lng: 100.147693, topic: 'OCPP/Elex_DC_PT_Wachirabarami1_1/heartbeat', name: 'Wachirabarami 1' },
+{ id: 159, lat: 14.204414, lng: 100.663022, topic: 'OCPP/PT_Wangnoi3/heartbeat',   name: 'Wangnoi 3' },
+{ id: 160, lat: 14.245833849403885, lng: 100.65711573497488, topic: 'OCPP/PT_Wangnoi4/heartbeat', name: 'Wangnoi 4' },
+{ id: 161, lat: 13.77703390184574, lng: 102.20581975381121, topic: 'OCPP/Elex_DC_PT_Wattananakhon3_1/heartbeat',  name: 'Wattananakhon 3' },
+{ id: 162, lat: 15.770807, lng: 104.184025, topic: 'OCPP/Yasothon/heartbeat', name: 'Yasothon' },
+ ];
+
+
+
+
+
+    
+let evChargers = [];
+
+try {
+  const cached = localStorage.getItem("evChargersCache");
+
+  if (cached) {
+    console.log("📦 โหลดสถานี EV จาก cache");
+    const parsed = JSON.parse(cached);
+
+    // ✅ เช็คว่าเป็น array และมีข้อมูล
+    if (Array.isArray(parsed) && parsed.length > 0) {
+      evChargers = parsed;
+    } else {
+      console.warn("⚠️ cache ว่างหรือไม่ถูกต้อง → ใช้ default");
+      evChargers = defaultEvChargers;
+    }
+  } else {
+    console.log("📡 โหลดสถานี EV แบบเต็ม (ครั้งแรก)");
+    evChargers = defaultEvChargers;
+  }
+} catch (e) {
+  console.warn("❌ โหลด cache ผิดพลาด → fallback", e);
+  evChargers = defaultEvChargers;
+}
+
+        let isInitialLoadDone = false;
+        let readyForOfflineDetection = false;
+        const totalExpectedStations = evChargers.length;
+        let receivedStationStatusCount = 0;
+        const receivedStationIds = new Set();
+
+        const chargerMarkers = new Map();
+        let activeCount = 0;
+        let inactiveCount = 0;
+        let lastOfflineIds = new Set();
+
+        const heartbeatTimers = new Map();
+        let selectedStationId = null;
+        let currentStationId = null;
+        
+
+
+        const ws = new WebSocket("ws://192.168.0.132:8080");
+        const stationStatusMap = {};
+
+
+        
+        ws.onopen = () => {
+        evChargers.forEach(charger => {
+        console.log('🛰 Subscribing via WS:', charger.id, charger.topic); // ⬅️ ใส่ log ตรงนี้
+        ws.send(JSON.stringify({ topic: charger.topic, id: charger.id }));
+    });
+};
+
+function getLocationIcon(status) {
+    const iconUrl = status === 'active' ? 'images/on.png'
+                  : status === 'warning' ? 'images/warning.png'
+                  : 'images/off.png';
+    return L.icon({
+        iconUrl,
+        iconSize: [32, 32],
+        iconAnchor: [16, 32],
+        popupAnchor: [0, -32],
+        className: 'map-icon'
+    });
+}
+
+function updateStatusCount() {
+  activeCount = 0;
+  inactiveCount = 0;
+  const newOfflineIds = new Set();
+
+  chargerMarkers.forEach(chg => {
+    const iconUrl = chg.marker.options.icon.options.iconUrl;
+    if (iconUrl.includes('on.png')) {
+      activeCount++;
+    } else {
+      inactiveCount++;
+      newOfflineIds.add(chg.id);
+    }
+  });
+
+  lastOfflineIds = newOfflineIds;
+
+  const activeEl = document.getElementById('active-count');
+  const inactiveEl = document.getElementById('inactive-count');
+  const totalEl = document.getElementById('totalStations');
+
+  if (activeEl) activeEl.textContent = activeCount;
+  if (inactiveEl) inactiveEl.textContent = inactiveCount;
+
+  if (totalEl) {
+    console.log("✅ Updating totalStations:", evChargers.length);
+    totalEl.textContent = evChargers.length;
+  } else {
+    console.warn("❌ ไม่พบ element #totalStations");
+  }
+
+  updateSummaryCounters();
+}
+
+
+/////////////////////////////////////////
+
+function updateOfflineListPanel() {
+  const edgeboxList = document.getElementById("edgeboxList");
+  const pi5List = document.getElementById("pi5List");
+  const pmList = document.getElementById("pmList");
+
+  if (!edgeboxList || !pi5List || !pmList) return;
+
+  edgeboxList.innerHTML = '';
+  pi5List.innerHTML = '';
+  pmList.innerHTML = '';
+
+  chargerMarkers.forEach(chg => {
+    if (chg.edgebox?.heartbeat !== 1) {
+      const li = document.createElement("li");
+      li.innerHTML = `${chg.name} <span class="status-fail">Offline</span>`;
+      li.addEventListener("click", () => {
+        map.setView(chg.latlng, 16);
+        chg.marker.openPopup();
+      });
+      edgeboxList.appendChild(li);
+    }
+
+    if (chg.pi5?.status !== 1) {
+      const li = document.createElement("li");
+      li.innerHTML = `${chg.name} <span class="status-fail">Offline</span>`;
+      li.addEventListener("click", () => {
+        map.setView(chg.latlng, 16);
+        chg.marker.openPopup();
+      });
+      pi5List.appendChild(li);
+    }
+
+    if (window.offlinePmList?.has(String(chg.id))) {
+      const li = document.createElement("li");
+      li.innerHTML = `${chg.name} <span class="status-fail">Offline</span>`;
+      li.addEventListener("click", () => {
+        map.setView(chg.latlng, 16);
+        chg.marker.openPopup();
+      });
+      pmList.appendChild(li);
+    }
+  });
+}
+
+
+
+
+
+
+
+
+/////////////////////////////////////////
+
+
+
+
+
+// ✅ function นี้เขียนนอก updateStatusCount
+function updateSummaryCounters() {
+    let offlineEdgebox = 0;
+    let offlinePi5 = 0;
+
+    chargerMarkers.forEach(chg => {
+        if (chg.edgebox?.heartbeat !== 1) offlineEdgebox++;
+        if (chg.pi5?.status !== 1) offlinePi5++;
+    });
+
+    // ✅ ใช้จาก offlinePmList ที่อัปเดตไว้ตอนโหลด PM
+    const offlinePm = window.offlinePmList?.size || 0;
+
+    // ✅ อัปเดต mini bar
+    const elEdge = document.getElementById('offlineEdgebox');
+    if (elEdge) elEdge.textContent = offlineEdgebox;
+
+    const elPi5 = document.getElementById('offlinePi5');
+    if (elPi5) elPi5.textContent = offlinePi5;
+
+    const elPm = document.getElementById('offlinePm');
+    if (elPm) elPm.textContent = offlinePm;
+
+    const totalEl = document.getElementById('total-count');
+    if (totalEl) totalEl.textContent = chargerMarkers.size;
+
+}
+
+
+const panel = document.getElementById("statusPanel");
+const toggleBtn = document.getElementById("togglePanelBtn");
+const toggleIcon = document.getElementById("toggleIcon"); // ไอคอนในปุ่ม
+const openPanelBtn = document.getElementById("openPanelBtn");
+
+toggleBtn.addEventListener("click", () => {
+  panel.classList.add("hidden");
+  openPanelBtn.style.display = "block";
+
+  // เปลี่ยน icon เป็นขวา (เพราะ panel ถูกซ่อน)
+  toggleIcon.classList.remove("fa-chevron-left");
+  toggleIcon.classList.add("fa-chevron-right");
+});
+
+openPanelBtn.addEventListener("click", () => {
+  panel.classList.remove("hidden");
+  openPanelBtn.style.display = "none";
+
+  // เปลี่ยน icon กลับไปเป็นซ้าย (เพราะ panel แสดงแล้ว)
+  toggleIcon.classList.remove("fa-chevron-right");
+  toggleIcon.classList.add("fa-chevron-left");
+});
+
+let hasShownOfflineModal = false;
+
+function updateStatusPanel(edgeOnline, pi5Online, pmOnline) {
+  const edgeboxList = document.getElementById("edgeboxList");
+  const pi5List = document.getElementById("pi5List");
+  const pmList = document.getElementById("pmList");
+
+  const edgeOffline = [];
+  const pi5Offline = [];
+  const pmOffline = [];
+
+  chargerMarkers.forEach(chg => {
+    if (chg.edgebox?.heartbeat !== 1) edgeOffline.push(chg.name);
+    if (chg.pi5?.status !== 1) pi5Offline.push(chg.name);
+    if (window.offlinePmList?.has(String(chg.id))) pmOffline.push(chg.name);
+  });
+
+  edgeboxList.innerHTML = edgeOffline.map(name => `<li>${name} <span class="status-fail">Offline</span></li>`).join("");
+  pi5List.innerHTML = pi5Offline.map(name => `<li>${name} <span class="status-fail">Offline</span></li>`).join("");
+  pmList.innerHTML = pmOffline.map(name => `<li>${name} <span class="status-fail">Offline</span></li>`).join("");
+
+  // ✅ ตรวจว่ามี Offline แล้วโชว์ modal
+  const totalOffline = edgeOffline.length + pi5Offline.length + pmOffline.length;
+
+  if (totalOffline > 0 && !hasShownOfflineModal) {
+    hasShownOfflineModal = true;
+    
+    // 📌 ใช้ delay เล็กน้อยเพื่อให้ modal ทำงานหลัง DOM อัปเดต
+    setTimeout(() => {
+      showOfflineModal();
+    }, 100);
+  }
+
+  if (totalOffline === 0) {
+    hasShownOfflineModal = false;
+  }
+}
+
+
+
+
+
+
+
+
+// ตัวอย่าง: event เมื่อคลิก icon บนแผนที่
+function onMapIconClick(stationId) {
+  selectedStationId = stationId;
+  const chg = chargerMarkers.get(String(stationId));
+  if (!chg) {
+    console.warn("❌ ไม่พบ charger:", stationId);
+    return;
+  }
+
+  openStationModal(chg);              // ✅ ส่ง object ที่ต้องใช้จริง
+  fetchPowerModule(stationId);
+}
+
+        const searchInput = document.getElementById('searchInput');
+        const suggestionBox = document.getElementById('searchSuggestions');
+
+
+evChargers.forEach(charger => {
+  console.log("📍 สร้าง marker:", charger.name);
+  const marker = L.marker([charger.lat, charger.lng], {
+    icon: getLocationIcon('inactive')
+  }).addTo(map);
+
+  marker.on('click', () => {
+    console.log("📍 marker clicked, calling onMapIconClick:", charger.id);
+    onMapIconClick(String(charger.id));
+  });
+
+            marker.bindTooltip(charger.name, {
+                permanent: false,
+                direction: 'top',
+                offset: [0, -10],
+                className: 'charger-tooltip'
+            });
+
+            chargerMarkers.set(String(charger.id), {
+                id: String(charger.id),
+                name: charger.name,
+                latlng: [charger.lat, charger.lng],
+                marker,
+                heartbeat: 0
+                //1
+            });
+        });
+        window.addEventListener('DOMContentLoaded', () => {
+  updateStatusCount();
+});
+        
+
+        searchInput.addEventListener('input', function () {
+            const query = this.value.toLowerCase().trim();
+            suggestionBox.innerHTML = '';
+            suggestionBox.style.display = query ? 'block' : 'none';
+            if (!query) return;
+
+            const suggestions = Array.from(chargerMarkers.values()).filter(charger =>
+                charger.name.toLowerCase().includes(query)
+            );
+
+            if (suggestions.length === 0) {
+                const li = document.createElement('li');
+                li.textContent = 'ไม่พบสถานีที่ตรงกับคำค้น';
+                li.classList.add('no-match');
+                suggestionBox.appendChild(li);
+                return;
+            }
+
+            suggestions.slice(0, 10).forEach(charger => {
+                const li = document.createElement('li');
+                li.textContent = charger.name;
+                li.addEventListener('click', () => {
+                    map.setView(charger.latlng, 16);
+                    charger.marker.openPopup();
+                    searchInput.value = charger.name;
+                    suggestionBox.innerHTML = '';
+                    suggestionBox.style.display = 'none';
+                });
+                suggestionBox.appendChild(li);
+            });
+        });
+
+        let spinnerTimeout = setTimeout(() => {
+            if (!isInitialLoadDone) {
+                console.log('⏳ Timeout หมดเวลา รันปิด spinner');
+                stopSpinner();
+            }
+        }, 30000);
+
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////ล่าสุด
+
+
+        ws.onmessage = (event) => {
+  try {
+    if (!isJSONString(event.data)) {
+      console.log('Received non-JSON message:', event.data);
+      return;
+    }
+
+    const data = JSON.parse(event.data);
+
+
+
+
+
+let id = data.id ? String(data.id) : null;
+
+if (!id && data.topic) {
+  const meta = stationMetaMap[data.topic];
+  if (meta) {
+    id = String(meta.frontendId);
+    console.log("🧩 [Fallback] แมป stationId จาก topic:", data.topic, "→", id);
+  } else {
+    console.warn("❗ ไม่สามารถหา stationId จาก topic:", data.topic);
+    return;
+  }
+}
+
+
+
+
+
+
+// ✅ ย้ายมาที่นี่ หลังจากมี id แน่ๆ แล้ว
+//if (data.powerModule) {
+  //updatePowerModuleUI(data, id);
+//}
+
+    console.log("📡 Received topic:", data.topic);
+
+    if (data.type === "info") return;
+
+    const isEdgeboxHeartbeat = data.topic?.endsWith('/heartbeat') && !data.topic?.includes('PI5');
+    const isPi5Heartbeat = data.topic?.endsWith('/heartbeatPI5');
+
+    // สร้างโครงสร้าง station ถ้ายังไม่มี
+    if (!stationStatusMap[id]) {
+      stationStatusMap[id] = { temp: undefined, edgebox: {}, pi5: {} };
+    }
+
+    // ✅ อัปเดต Edgebox เฉพาะเมื่อมาจาก Edgebox
+    if (isEdgeboxHeartbeat) {
+      console.log("📦 [EDGEBOX] Updating edgebox heartbeat:", data.heartbeat, "at", data.timestamp);
+      stationStatusMap[id].edgebox = {
+        heartbeat: data.heartbeat,
+        timestamp: data.timestamp
+      };
+    }
+
+    // ✅ อัปเดต PI5 เฉพาะเมื่อมาจาก PI5
+    if (isPi5Heartbeat) {
+      console.log("🔋 [PI5] Updating PI5 status:", data.pi5, "at", data.timestamp);
+      stationStatusMap[id].pi5 = {
+        status: data.pi5,
+        timestamp: data.pi5LastOnline ?? Date.now()
+      };
+    }
+
+    // ✅ อัปเดตอุณหภูมิ (ถ้ามี)
+    if (data.temp !== undefined) {
+      stationStatusMap[id].temp = data.temp;
+    }
+
+    const chg = chargerMarkers.get(id);
+    if (chg) {
+      chg.edgebox = { ...stationStatusMap[id].edgebox };
+      chg.pi5 = { ...stationStatusMap[id].pi5 };  // ✅ shallow copy
+      chg.temp = stationStatusMap[id].temp;
+
+      const isEdgeboxOnline = chg.edgebox?.heartbeat === 1;
+const isPi5Online = chg.pi5?.status === 1;
+
+let iconStatus;
+
+// ✅ แก้ logic → เช็คเฉพาะ edgebox ก่อน
+if (isEdgeboxOnline) {
+    iconStatus = isPi5Online ? 'active' : 'warning'; // edgebox online → เขียวถ้า pi5 online / เหลืองถ้า pi5 offline
+} else {
+    iconStatus = isPi5Online ? 'inactive' : 'inactive'; // edgebox offline → ไม่เปลี่ยน (เดิม)
+}
+
+chg.marker.setIcon(getLocationIcon(iconStatus));
+
+      const modalOpen = document.getElementById('stationModal').style.display === 'flex';
+      if (modalOpen && selectedStationId === id) {
+        // ✅ อัปเดตเฉพาะส่วนที่มาจากข้อมูลที่เข้ามา
+        if (isEdgeboxHeartbeat) {
+          updateEdgeboxStatus(isEdgeboxOnline ? "Online" : "Offline");
+          if (chg.edgebox?.timestamp) {
+            updateStatusTimestamp(chg.edgebox.timestamp, 'statusEdgeboxUpdate');
+          }
+        }
+
+        if (isPi5Heartbeat) {
+  updatePi5Status(isPi5Online ? "Online" : "Offline");
+  if (chg.pi5?.timestamp) {
+    updateStatusTimestamp(chg.pi5.timestamp, 'statusPi5Update');
+  }
+}
+
+function updatePi5Status(status) {
+  const pi5Led = document.getElementById('statusPi5Led');
+  const statusText = document.getElementById('statusPi5');
+
+  if (status === 'Online') {
+    pi5Led.classList.add('green-led');
+    pi5Led.classList.remove('red-led');
+    statusText.textContent = 'Online';
+  } else {
+    pi5Led.classList.add('red-led');
+    pi5Led.classList.remove('green-led');
+    statusText.textContent = 'Offline';
+  }
+}
+
+
+        if (chg.temp !== undefined) {
+          const { display, color } = formatTemperature(chg.temp);
+          const tempElem = document.getElementById('stationTemp');
+          tempElem.textContent = display;
+          tempElem.style.color = color;
+        }
+      }
+
+      try {
+    localStorage.setItem("evChargersCache", JSON.stringify(evChargers));
+    console.log("💾 บันทึก evChargers ลง cache แล้ว");
+  } catch (e) {
+    console.warn("❌ เก็บ cache ไม่ได้:", e);
+  }
+
+      console.log('🧪 chg:', {
+        edgebox: chg.edgebox,
+        pi5: chg.pi5,
+        temp: chg.temp
+      });
+    }
+
+    updateStatusCount();
+
+    if (!receivedStationIds.has(data.id)) {
+      receivedStationIds.add(data.id);
+      receivedStationStatusCount++;
+      if ((receivedStationStatusCount / totalExpectedStations) >= 0.8 && !isInitialLoadDone) {
+        clearTimeout(spinnerTimeout);
+        stopSpinner();
+      }
+    }
+    updateOfflineListPanel(); 
+  } catch (err) {
+    console.error('❌ Error parsing WebSocket:', err);
+  }
+};
+
+
+
+
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////ล่าสุด
+
+        function isJSONString(str) {
+            try {
+                JSON.parse(str);
+            } catch (e) {
+                return false;
+            }
+            return true;
+        }
+
+        function stopSpinner() {
+  if (isInitialLoadDone) return;
+  isInitialLoadDone = true;
+  readyForOfflineDetection = true;
+
+  const spinner = document.getElementById('loader');
+  if (spinner) spinner.style.display = 'none';
+
+  // ✅ เรียกใช้งานฟังก์ชันที่ประกาศไว้
+  batchFetchPowerModules();
+
+  showToast("⚡ ระบบพร้อมทำงานแล้ว");
+  playAlert();
+}
+
+
+        // ✅ ฟังก์ชันแยกอยู่นอก stopSpinner
+async function batchFetchPowerModules() {
+  for (const chg of evChargers) {
+    try {
+      const apiHost = window.location.hostname;
+      const res = await fetch(`http://${apiHost}:3000/api/powermodule?stationId=${chg.id}`);
+      if (!res.ok) continue;
+
+      const data = await res.json();
+      if (!stationStatusMap[chg.id]) {
+        stationStatusMap[chg.id] = {};
+      }
+
+      // ✅ เก็บไว้ทั้ง 2 ที่
+      stationStatusMap[chg.id].powerModule = data.powerModule;
+
+      if (selectedStationId === String(chg.id)) {
+        updatePowerModuleUI(data, chg.id);
+      }
+
+      const pm = data.powerModule;
+const isValid = evaluatePowerModuleStatus(chg.id, Number(pm.PM1), Number(pm.PM2));
+
+if (!window.offlinePmList) window.offlinePmList = new Set();
+
+if (!isValid) {
+  window.offlinePmList.add(String(chg.id));
+} else {
+  window.offlinePmList.delete(String(chg.id));
+}
+
+
+
+    } catch (e) {
+      console.warn("⚠️ Error fetching PM for station", chg.id, e);
+    }
+  }
+
+  // ✅ อัปเดต mini bar หลัง preload เสร็จทุกตัว
+  updateSummaryCounters();
+}
+
+
+async function fetchAllPowerModules() {
+  try {
+    const apiHost = window.location.hostname;
+    const res = await fetch(`http://${apiHost}:3000/api/powermodule/all`);
+    if (!res.ok) throw new Error("โหลดข้อมูล Power Module ไม่สำเร็จ");
+
+    const data = await res.json();
+    console.log("📦 ข้อมูล Power Module ทั้งหมด:", data);
+
+    let errorCount = 0;
+    let failedStations = [];
+
+    for (const station of data) {
+      const stationId = String(station.stationId);
+      const pm1 = Number(station.PM1);
+      const pm2 = Number(station.PM2);
+
+      const config = powerModuleConfig[stationId];
+      if (!config) continue;
+
+      const pm1Match = pm1 === config.PM1;
+      const pm2Match = pm2 === config.PM2;
+
+      if (!pm1Match || !pm2Match) {
+        errorCount++;
+        failedStations.push(stationId); // ✅ เก็บ ID ของสถานีที่ผิด
+      }
+    }
+
+    // ✅ เก็บไว้ให้ modal ใช้
+    window.offlinePmList = failedStations;
+
+    // ✅ อัปเดต mini status bar
+    document.getElementById("offlinePm").textContent = errorCount;
+  } catch (err) {
+    console.error("❌ ERROR ใน fetchAllPowerModules:", err);
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        function showOfflineModal(type = null) {
+  const modal = document.getElementById('offlineModal');
+  const list = document.getElementById('offlineList');
+  if (!modal || !list) {
+    console.error("❌ ไม่พบ offlineModal หรือ offlineList");
+    return;
+  }
+
+  list.innerHTML = '';
+
+  const edgeboxList = [];
+  const pi5List = [];
+  const pmList = [];
+
+  chargerMarkers.forEach(chg => {
+    if (chg.edgebox?.heartbeat !== 1) edgeboxList.push(chg);
+    if (chg.pi5?.status !== 1) pi5List.push(chg);
+    if (window.offlinePmList?.has(String(chg.id))) pmList.push(chg);
+  });
+
+  const sections = {
+    edgebox: ["Edgebox Offline", edgeboxList],
+    pi5: ["PI5 Offline", pi5List],
+    power: ["Power Module Offline", pmList],
+  };
+
+  if (type) {
+    const [title, chargers] = sections[type];
+    addSection(title, chargers);
+  } else {
+    addSection("Edgebox Offline", edgeboxList);
+    addSection("PI5 Offline", pi5List);
+    addSection("Power Module Offline", pmList);
+  }
+
+  updateStatusPanel(
+    edgeboxList.map(c => c.name || `Edgebox ${c.id}`),
+    pi5List.map(c => c.name || `PI5 ${c.id}`),
+    pmList.map(c => c.name || `PM ${c.id}`)
+  );
+
+  modal.style.display = 'flex';
+
+  function addSection(title, chargers) {
+    if (chargers.length === 0) return;
+
+    const header = document.createElement('li');
+    header.innerHTML = `<strong>${title} (${chargers.length})</strong>`;
+    list.appendChild(header);
+
+    chargers.forEach(chg => {
+      const li = document.createElement('li');
+      li.textContent = chg.name;
+      li.addEventListener('click', () => {
+        map.setView(chg.latlng, 16);
+        chg.marker.openPopup();
+        closeOfflineModal();
+      });
+      list.appendChild(li);
+    });
+  }
+}
+
+
+
+function closeOfflineModal() {
+  const modal = document.getElementById('offlineModal');
+  if (modal) modal.style.display = 'none';
+}
+
+
+
+        function playAlert() {
+            const audio = document.getElementById('alertSound');
+            if (audio) audio.play().catch(err => console.error('🔇 ไม่สามารถเล่นเสียง:', err));
+        }
+
+        function showToast(message) {
+            const container = document.getElementById('toast-container') || createToastContainer();
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 5000);
+        }
+
+        function createToastContainer() {
+            const div = document.createElement('div');
+            div.id = 'toast-container';
+            div.style.position = 'fixed';
+            div.style.top = '20px';
+            div.style.right = '20px';
+            div.style.zIndex = '9999';
+            document.body.appendChild(div);
+            return div;
+        }
+
+        function testToast() {
+            playAlert();
+            showToast("🎉 ทดสอบแจ้งเตือนสำเร็จ!");
+        }
+
+        function formatTemperature(rawTemp) {
+    const temp = rawTemp / 10;
+    const display = `${temp.toFixed(1)} °C`;
+
+    let color = 'green';
+    if (temp >= 75) {
+        color = 'red';
+    } else if (temp >= 65) {
+        color = '#f4c542'; // เหลือง
+    }
+
+    return { display, color };
+}
+
+
+////Fan
+
+const fanTypeConfig = {
+  "1": { "type": "EBM7", "updated": "2025-05-08T14:25:00" },
+  "2": { "type": "DC Windstorm", "updated": "2025-05-08T14:25:00" },
+  "3": { "type": "DAKO", "updated": "2025-05-08T12:00:00" },
+  "4": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "5": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "6": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "7": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "8": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "9": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "10": { "type": "EBM7", "updated": "2025-05-08T14:25:00" },
+  "11": { "type": "DC Windstorm", "updated": "2025-05-08T14:25:00" },
+  "12": { "type": "DAKO", "updated": "2025-05-08T12:00:00" },
+  "13": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "14": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "15": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "16": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "17": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "18": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "19": { "type": "EBM7", "updated": "2025-05-08T14:25:00" },
+  "20": { "type": "DC Windstorm", "updated": "2025-05-08T14:25:00" },
+  "21": { "type": "DAKO", "updated": "2025-05-08T12:00:00" },
+  "22": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "23": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "24": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "25": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "26": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "27": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "28": { "type": "EBM7", "updated": "2025-05-08T14:25:00" },
+  "29": { "type": "DC Windstorm", "updated": "2025-05-08T14:25:00" },
+  "30": { "type": "DAKO", "updated": "2025-05-08T12:00:00" },
+  "31": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "32": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "33": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "34": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "35": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "36": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "37": { "type": "EBM7", "updated": "2025-05-08T14:25:00" },
+  "38": { "type": "DC Windstorm", "updated": "2025-05-08T14:25:00" },
+  "39": { "type": "DAKO", "updated": "2025-05-08T12:00:00" },
+  "40": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "41": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "42": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "43": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "44": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "45": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "46": { "type": "EBM7", "updated": "2025-05-08T14:25:00" },
+  "47": { "type": "DC Windstorm", "updated": "2025-05-08T14:25:00" },
+  "48": { "type": "DAKO", "updated": "2025-05-08T12:00:00" },
+  "49": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "50": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "51": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "52": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "53": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "54": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "55": { "type": "EBM7", "updated": "2025-05-08T14:25:00" },
+  "56": { "type": "DC Windstorm", "updated": "2025-05-08T14:25:00" },
+  "57": { "type": "DAKO", "updated": "2025-05-08T12:00:00" },
+  "58": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "59": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "60": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "61": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "62": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "63": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "64": { "type": "EBM7", "updated": "2025-05-08T14:25:00" },
+  "65": { "type": "DC Windstorm", "updated": "2025-05-08T14:25:00" },
+  "66": { "type": "DAKO", "updated": "2025-05-08T12:00:00" },
+  "67": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "68": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "69": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "70": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "71": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "72": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "73": { "type": "EBM7", "updated": "2025-05-08T14:25:00" },
+  "74": { "type": "DC Windstorm", "updated": "2025-05-08T14:25:00" },
+  "75": { "type": "DAKO", "updated": "2025-05-08T12:00:00" },
+  "76": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "77": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "78": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "79": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "80": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "81": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "82": { "type": "EBM7", "updated": "2025-05-08T14:25:00" },
+  "83": { "type": "DC Windstorm", "updated": "2025-05-08T14:25:00" },
+  "84": { "type": "DAKO", "updated": "2025-05-08T12:00:00" },
+  "85": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "86": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "87": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "88": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "89": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "90": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "91": { "type": "EBM7", "updated": "2025-05-08T14:25:00" },
+  "92": { "type": "DC Windstorm", "updated": "2025-05-08T14:25:00" },
+  "93": { "type": "DAKO", "updated": "2025-05-08T12:00:00" },
+  "94": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "95": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "96": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "97": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "98": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "99": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "100": { "type": "EBM7", "updated": "2025-05-08T14:25:00" },
+  "101": { "type": "DC Windstorm", "updated": "2025-05-08T14:25:00" },
+  "102": { "type": "DAKO", "updated": "2025-05-08T12:00:00" },
+  "103": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "104": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "105": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "106": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "107": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "108": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "109": { "type": "EBM7", "updated": "2025-05-08T14:25:00" },
+  "110": { "type": "DC Windstorm", "updated": "2025-05-08T14:25:00" },
+  "111": { "type": "DAKO", "updated": "2025-05-08T12:00:00" },
+  "112": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "113": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "114": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "115": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "116": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "117": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "118": { "type": "EBM7", "updated": "2025-05-08T14:25:00" },
+  "119": { "type": "DC Windstorm", "updated": "2025-05-08T14:25:00" },
+  "120": { "type": "DAKO", "updated": "2025-05-08T12:00:00" },
+  "121": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "122": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "123": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "124": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "125": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "126": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "127": { "type": "EBM7", "updated": "2025-05-08T14:25:00" },
+  "128": { "type": "DC Windstorm", "updated": "2025-05-08T14:25:00" },
+  "129": { "type": "DAKO", "updated": "2025-05-08T12:00:00" },
+  "130": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "131": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "132": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "133": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "134": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "135": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "136": { "type": "EBM7", "updated": "2025-05-08T14:25:00" },
+  "137": { "type": "DC Windstorm", "updated": "2025-05-08T14:25:00" },
+  "138": { "type": "DAKO", "updated": "2025-05-08T12:00:00" },
+  "139": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "140": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "141": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "142": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "143": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "144": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "145": { "type": "EBM7", "updated": "2025-05-08T14:25:00" },
+  "146": { "type": "DC Windstorm", "updated": "2025-05-08T14:25:00" },
+  "147": { "type": "DAKO", "updated": "2025-05-08T12:00:00" },
+  "148": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "149": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "150": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "151": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "152": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "153": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "154": { "type": "EBM7", "updated": "2025-05-08T14:25:00" },
+  "155": { "type": "DC Windstorm", "updated": "2025-05-08T14:25:00" },
+  "156": { "type": "DAKO", "updated": "2025-05-08T12:00:00" },
+  "157": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "158": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "159": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "160": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "161": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" },
+  "162": { "type": "EBM5+3", "updated": "2025-05-08T14:25:00" }
+};
+
+function updateFanInfo(stationId) {
+  const fanData = fanTypeConfig[stationId];
+
+  const typeEl = document.getElementById("stationFanType");
+  const tsEl = document.getElementById("fanTypeTimestamp");
+
+  if (!fanData) {
+    typeEl.textContent = 'ชนิดพัดลม -';
+    tsEl.textContent = 'อัปเดตเมื่อ -';
+    return;
+  }
+
+  typeEl.textContent = `${fanData.type}`;
+
+  if (fanData.updated) {
+    updateStatusTimestamp(fanData.updated, "fanTypeTimestamp");
+  } else {
+    tsEl.textContent = 'อัปเดตเมื่อ -';
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+////////////////////////////////////////////////////////////////////////// แก้ตอนนี้ 05/08/2025
+
+const powerModuleConfig = {
+  '1':  { PM1: 2, PM2: 3 },
+  '2':  { PM1: 2, PM2: 3 },
+  '3':  { PM1: 2, PM2: 3 },
+  '4':  { PM1: 2, PM2: 3 },
+  '5':  { PM1: 2, PM2: 3 },
+  '6':  { PM1: 2, PM2: 3 },
+  '7':  { PM1: 2, PM2: 3 },
+  '8':  { PM1: 2, PM2: 3 },
+  '9':  { PM1: 2, PM2: 3 },
+  '10': { PM1: 2, PM2: 3 },
+  '11': { PM1: 2, PM2: 3 },
+  '12': { PM1: 2, PM2: 3 },
+  '13': { PM1: 2, PM2: 3 },
+  '14': { PM1: 2, PM2: 3 },
+  '15': { PM1: 2, PM2: 3 },
+  '16': { PM1: 2, PM2: 3 },
+  '17': { PM1: 2, PM2: 3 },
+  '18': { PM1: 2, PM2: 3 },
+  '19': { PM1: 2, PM2: 3 },
+  '20': { PM1: 2, PM2: 3 },
+  '21': { PM1: 2, PM2: 3 },
+  '22': { PM1: 2, PM2: 3 },
+  '23': { PM1: 2, PM2: 3 },
+  '24': { PM1: 2, PM2: 3 },
+  '25': { PM1: 2, PM2: 3 },
+  '26': { PM1: 2, PM2: 3 },
+  '27': { PM1: 2, PM2: 3 },
+  '28': { PM1: 2, PM2: 3 },
+  '29': { PM1: 2, PM2: 3 },
+  '30': { PM1: 2, PM2: 3 },
+  '31': { PM1: 2, PM2: 3 },
+  '32': { PM1: 2, PM2: 3 },
+  '33': { PM1: 2, PM2: 3 },
+  '34': { PM1: 2, PM2: 3 },
+  '35': { PM1: 2, PM2: 3 },
+  '36': { PM1: 2, PM2: 3 },
+  '37': { PM1: 2, PM2: 3 },
+  '38': { PM1: 2, PM2: 3 },
+  '39': { PM1: 2, PM2: 2 },
+  '40': { PM1: 1, PM2: 1 },
+  '41': { PM1: 2, PM2: 3 },
+  '42': { PM1: 2, PM2: 3 },
+  '43': { PM1: 2, PM2: 3 },
+  '44': { PM1: 2, PM2: 2 },
+  '45': { PM1: 2, PM2: 3 },
+  '46': { PM1: 2, PM2: 3 },
+  '47': { PM1: 2, PM2: 3 },
+  '48': { PM1: 2, PM2: 3 },
+  '49': { PM1: 2, PM2: 3 },
+  '50': { PM1: 2, PM2: 3 },
+  '51': { PM1: 2, PM2: 3 },
+  '52': { PM1: 2, PM2: 3 },
+  '53': { PM1: 2, PM2: 3 },
+  '54': { PM1: 2, PM2: 3 },
+  '55': { PM1: 2, PM2: 3 },
+  '56': { PM1: 2, PM2: 3 },
+  '57': { PM1: 2, PM2: 3 },
+  '58': { PM1: 2, PM2: 3 },
+  '59': { PM1: 2, PM2: 3 },
+  '60': { PM1: 2, PM2: 3 },
+  '61': { PM1: 2, PM2: 2 },
+  '62': { PM1: 2, PM2: 3 },
+  '63': { PM1: 2, PM2: 3 },
+  '64': { PM1: 2, PM2: 3 },
+  '65': { PM1: 2, PM2: 3 },
+  '66': { PM1: 2, PM2: 3 },
+  '67': { PM1: 2, PM2: 3 },
+  '68': { PM1: 2, PM2: 3 },
+  '69': { PM1: 2, PM2: 3 },
+  '70': { PM1: 2, PM2: 3 },
+  '71': { PM1: 2, PM2: 3 },
+  '72': { PM1: 2, PM2: 3 },
+  '73': { PM1: 2, PM2: 3 },
+  '74': { PM1: 2, PM2: 3 },
+  '75': { PM1: 2, PM2: 3 },
+  '76': { PM1: 2, PM2: 2 },
+  '77': { PM1: 2, PM2: 3 },
+  '78': { PM1: 2, PM2: 3 },
+  '79': { PM1: 2, PM2: 3 },
+  '80': { PM1: 2, PM2: 3 },
+  '81': { PM1: 2, PM2: 3 },
+  '82': { PM1: 2, PM2: 3 },
+  '83': { PM1: 2, PM2: 3 },
+  '84': { PM1: 2, PM2: 3 },
+  '85': { PM1: 2, PM2: 3 },
+  '86': { PM1: 2, PM2: 3 },
+  '87': { PM1: 2, PM2: 3 },
+  '88': { PM1: 2, PM2: 3 },
+  '89': { PM1: 2, PM2: 3 },
+  '90': { PM1: 2, PM2: 3 },
+  '91': { PM1: 2, PM2: 3 },
+  '92': { PM1: 2, PM2: 3 },
+  '93': { PM1: 2, PM2: 3 },
+  '94': { PM1: 2, PM2: 2 },
+  '95': { PM1: 2, PM2: 3 },
+  '96': { PM1: 2, PM2: 3 },
+  '97': { PM1: 2, PM2: 3 },
+  '98': { PM1: 2, PM2: 3 },
+  '99': { PM1: 2, PM2: 3 },
+  '100': { PM1: 2, PM2: 3 },
+  '101': { PM1: 2, PM2: 3 },
+  '102': { PM1: 2, PM2: 3 },
+  '103': { PM1: 2, PM2: 3 },
+  '104': { PM1: 2, PM2: 3 },
+  '105': { PM1: 2, PM2: 3 },
+  '106': { PM1: 2, PM2: 3 },
+  '107': { PM1: 2, PM2: 3 },
+  '108': { PM1: 2, PM2: 3 },
+  '109': { PM1: 2, PM2: 3 },
+  '110': { PM1: 2, PM2: 3 },
+  '111': { PM1: 2, PM2: 3 },
+  '112': { PM1: 2, PM2: 3 },
+  '113': { PM1: 2, PM2: 3 },
+  '114': { PM1: 2, PM2: 3 },
+  '115': { PM1: 2, PM2: 3 },
+  '116': { PM1: 2, PM2: 3 },
+  '117': { PM1: 2, PM2: 3 },
+  '118': { PM1: 2, PM2: 3 },
+  '119': { PM1: 2, PM2: 3 },
+  '120': { PM1: 2, PM2: 3 },
+  '121': { PM1: 2, PM2: 3 },
+  '122': { PM1: 2, PM2: 3 },
+  '123': { PM1: 2, PM2: 3 },
+  '124': { PM1: 2, PM2: 3 },
+  '125': { PM1: 2, PM2: 3 },
+  '126': { PM1: 2, PM2: 3 },
+  '127': { PM1: 2, PM2: 3 },
+  '128': { PM1: 2, PM2: 3 },
+  '129': { PM1: 2, PM2: 3 },
+  '130': { PM1: 2, PM2: 3 },
+  '131': { PM1: 2, PM2: 3 },
+  '132': { PM1: 2, PM2: 3 },
+  '133': { PM1: 2, PM2: 3 },
+  '134': { PM1: 2, PM2: 3 },
+  '135': { PM1: 2, PM2: 3 },
+  '136': { PM1: 2, PM2: 3 },
+  '137': { PM1: 2, PM2: 3 },
+  '138': { PM1: 2, PM2: 3 },
+  '139': { PM1: 2, PM2: 3 },
+  '140': { PM1: 2, PM2: 3 },
+  '141': { PM1: 2, PM2: 3 },
+  '142': { PM1: 2, PM2: 3 },
+  '143': { PM1: 2, PM2: 3 },
+  '144': { PM1: 2, PM2: 3 },
+  '145': { PM1: 2, PM2: 3 },
+  '146': { PM1: 2, PM2: 3 },
+  '147': { PM1: 2, PM2: 3 },
+  '148': { PM1: 2, PM2: 3 },
+  '149': { PM1: 2, PM2: 3 },
+  '150': { PM1: 2, PM2: 3 },
+  '151': { PM1: 2, PM2: 3 },
+  '152': { PM1: 2, PM2: 3 },
+  '153': { PM1: 2, PM2: 3 },
+  '154': { PM1: 2, PM2: 3 },
+  '155': { PM1: 2, PM2: 3 },
+  '156': { PM1: 2, PM2: 3 },
+  '157': { PM1: 2, PM2: 3 },
+  '158': { PM1: 2, PM2: 3 },
+  '159': { PM1: 2, PM2: 3 },
+  '160': { PM1: 2, PM2: 3 },
+  '161': { PM1: 2, PM2: 3 },
+  '162': { PM1: 2, PM2: 3 }
+};
+
+function updateMiniBarPmStatus(dataFromApi) {
+  let offlineCount = 0;
+
+  dataFromApi.forEach(item => {
+    const { stationId, PM1, PM2 } = item;
+    const expected = powerModuleConfig[String(stationId)];
+
+    if (!expected || expected.PM1 !== PM1 || expected.PM2 !== PM2) {
+      offlineCount++;
+    }
+  });
+
+  document.getElementById('offlinePm').textContent = offlineCount;
+}
+
+
+
+
+
+function updatePowerModuleUI(data, stationId) {
+  if (stationId !== selectedStationId) return;
+
+  console.log('[DEBUG] PM Data:', data);
+
+  const pm = data.powerModule;
+
+  const pm1El = document.getElementById("pm1-value");
+  const pm2El = document.getElementById("pm2-value");
+  const ts1El = document.getElementById("timestamp1");
+  const ts2El = document.getElementById("timestamp2");
+
+  if (!pm1El || !pm2El || !ts1El || !ts2El) {
+    console.error("❌ ไม่พบ element ของ Power Module");
+    return;
+  }
+
+  const pm1 = Number(pm.PM1);
+  const pm2 = Number(pm.PM2);
+
+  pm1El.textContent = pm1;
+  pm2El.textContent = pm2;
+
+  pm1El.className = 'pm-value';
+  pm2El.className = 'pm-value';
+
+  const config = powerModuleConfig[stationId];
+
+  if (config && typeof pm1 === 'number' && typeof pm2 === 'number') {
+    if (pm1 === config.PM1) pm1El.classList.add('green');
+    else pm1El.classList.add('red');
+
+    if (pm2 === config.PM2) pm2El.classList.add('green');
+    else pm2El.classList.add('red');
+  } else {
+    // fallback กรณีไม่มี config
+    pm1El.classList.add('red');
+    pm2El.classList.add('red');
+  }
+
+  if (pm.timestamp1) updateStatusTimestamp(pm.timestamp1, "timestamp1");
+  else ts1El.innerText = "อัปเดตเมื่อ -";
+
+  if (pm.timestamp2) updateStatusTimestamp(pm.timestamp2, "timestamp2");
+  else ts2El.innerText = "อัปเดตเมื่อ -";
+}
+
+function updateMiniBarPmStatus(dataFromApi) {
+  let offlineCount = 0;
+
+  dataFromApi.forEach(item => {
+    const stationId = String(item.stationId);
+    const expected = powerModuleConfig[String(stationId)];
+
+    if (!expected || expected.PM1 !== PM1 || expected.PM2 !== PM2) {
+      offlineCount++;
+    }
+  });
+
+  document.getElementById('offlinePm').textContent = offlineCount;
+}
+
+
+
+
+
+
+async function fetchPowerModule(stationId) {
+  try {
+    console.log("🛠 เริ่ม fetchPowerModule:", stationId);
+    const apiHost = window.location.hostname;
+    const res = await fetch(`http://${apiHost}:3000/api/powermodule?stationId=${stationId}`);
+
+    console.log("🔗 API Response status:", res.status);
+
+    if (!res.ok) throw new Error(`ไม่สามารถดึงข้อมูล PM ได้: ${res.statusText}`);
+
+    const data = await res.json();
+    console.log("📦 API data payload:", JSON.stringify(data, null, 2));
+
+    if (!data || Object.keys(data).length === 0) {
+      console.warn("⚠️ ไม่มีข้อมูล PM ที่ได้จาก API!");
+    }
+
+    if (selectedStationId === stationId) {
+  updatePowerModuleUI(data, stationId);
+
+  // ✅ ตรวจ config และอัปเดต mini bar
+  const pm = data.powerModule;
+  const isValid = evaluatePowerModuleStatus(stationId, Number(pm.PM1), Number(pm.PM2));
+
+  if (!window.offlinePmList) window.offlinePmList = new Set();
+
+  if (!isValid) {
+    window.offlinePmList.add(String(stationId));
+  } else {
+    window.offlinePmList.delete(String(stationId));
+  }
+      
+
+      updateSummaryCounters();
+
+      // ✅ แสดง modal ตรงนี้
+      /*if (selectedStationId === stationId && !isStationModalOpen) {
+  const modal = document.getElementById("stationModal");
+  if (modal) {
+    modal.style.display = 'flex';
+    isStationModalOpen = true;
+  }
+}
+    }
+  } catch (err) {
+    console.error("❌ ERROR ใน fetchPowerModule:", err);
+  }
+}*/
+
+let isStationModalOpen = false; // ✅ บรรทัดนี้สำคัญ
+
+function openStationModal(stationId) {
+  if (selectedStationId === stationId && !isStationModalOpen) {
+    const modal = document.getElementById("stationModal");
+    if (modal) {
+      modal.style.display = 'flex';
+      isStationModalOpen = true;
+    }
+  }
+}
+}
+  } catch (err) {
+    console.error("❌ ERROR ใน fetchPowerModule:", err);
+  }
+}
+
+
+function closeStationModal() {
+  const modal = document.getElementById("stationModal");
+  if (modal) {
+    modal.style.display = 'none';
+    isStationModalOpen = false;
+  }
+}
+
+
+function evaluatePowerModuleStatus(stationId, pm1, pm2) {
+  const idStr = String(stationId);
+  const config = powerModuleConfig[idStr];
+  if (!config) return false;
+
+  return config.PM1 === pm1 && config.PM2 === pm2;
+}
+
+
+
+
+
+
+
+
+
+function openStationModal(charger) {
+  document.getElementById("modalBackdrop").style.display = "block";
+  selectedStationId = String(charger.id);
+
+  // 🔒 ปิด scroll เมื่อ modal เปิด
+  document.body.classList.add("modal-open");
+
+  updateFanInfo(String(charger.id));
+
+  document.getElementById('stationImage').src = 'images/FLEX.png';
+  document.getElementById('stationName').textContent = charger.name;
+
+  const chg = chargerMarkers.get(String(charger.id));
+  if (!chg) return;
+
+  updateEdgeboxStatus(chg.edgebox?.heartbeat === 1 ? 'Online' : 'Offline');
+  if (chg.edgebox?.timestamp) {
+    updateStatusTimestamp(chg.edgebox.timestamp, 'statusEdgeboxUpdate');
+  } else {
+    document.getElementById('statusEdgeboxUpdate').innerText = 'อัปเดตเมื่อ -';
+  }
+
+  const pi5Status = chg.pi5?.status === 1 ? 'Online' : 'Offline';
+  document.getElementById('statusPi5').textContent = pi5Status;
+
+  const pi5Led = document.getElementById('statusPi5Led');
+  pi5Led.classList.toggle('green-led', pi5Status === 'Online');
+  pi5Led.classList.toggle('red-led', pi5Status !== 'Online');
+
+  if (chg.pi5?.timestamp) {
+    updateStatusTimestamp(chg.pi5.timestamp, 'statusPi5Update');
+  } else {
+    document.getElementById('statusPi5Update').innerText = 'อัปเดตเมื่อ -';
+  }
+
+  if (chg.temp !== undefined) {
+    const { display, color } = formatTemperature(chg.temp);
+    const tempElem = document.getElementById('stationTemp');
+    tempElem.textContent = display;
+    tempElem.style.color = color;
+  } else {
+    document.getElementById('stationTemp').textContent = '-';
+    document.getElementById('stationTemp').style.color = 'gray';
+  }
+
+
+  //document.getElementById('stationVoltage1').textContent = `หัว 1: ${charger.voltage1 || '-'}`;
+  //document.getElementById('stationVoltage2').textContent = `หัว 2: ${charger.voltage2 || '-'}`;
+
+// ไม่ใช้ marker.powerModule อีก
+fetchPowerModule(charger.id);
+
+
+
+  const modal = document.getElementById("stationModal");
+modal.style.opacity = '0';
+modal.style.display = 'flex';
+
+setTimeout(() => {
+  modal.style.opacity = '1';
+}, 50); // เพิ่ม delay 50ms ให้เกิด animation
+
+}
+
+
+
+
+
+  //const modal = document.getElementById("stationModal");
+  //if (modal) modal.style.display = 'flex';
+  //}
+
+////////////////////////////////////////////////////////////////////////////////
+
+mqttClient.subscribe('OCPP/+/heartbeatPI5');
+
+
+function handlePi5HeartbeatMessage(topic, message) {
+  const parts = topic.split('/');
+  const stationId = parts[1];  
+
+  if (!stationId) {
+    console.error(`❌ ไม่พบ stationId จาก topic: ${topic}`);
+    return;
+  }
+
+  let pi5Data;
+  try {
+    pi5Data = JSON.parse(message); // ✅ parse message ของ PI5
+  } catch (e) {
+    console.error(`❌ JSON parse error: ${message}`);
+    return;
+  }
+
+  const chg = chargerMarkers.get(stationId);
+  if (!chg) {
+    console.warn(`⚠️ ไม่พบ stationId ${stationId} ใน chargerMarkers`);
+    return;
+  }
+
+  // ✅ อัปเดตสถานะใน stationStatusMap
+  stationStatusMap[stationId].pi5 = {
+  status: pi5Data.heartbeatPI5,
+  timestamp: pi5Data.pi5LastOnline ?? Date.now() // ✅ ใช้เวลาจริงจาก message ถ้ามี
+};
+
+
+
+  console.log(`✅ Updated pi5 for ${stationId}:`, stationStatusMap[stationId].pi5);
+
+  // ✅ COPY object → ป้องกันไม่ให้ chg.pi5 ชี้ reference เดียวกับ stationStatusMap
+  chg.pi5 = { ...stationStatusMap[stationId].pi5 };
+
+  if (stationId === 'Banbueng10') {
+  console.log('🧪 UI | Modal OPEN for station:', stationId);  
+  console.log('🧪 DEBUG | PI5 | Banbueng10 | pi5:', chg.pi5);
+  console.log('🧪 DEBUG | PI5 | Banbueng10 | pi5.status:', chg.pi5.status);
+  console.log('🧪 DEBUG | PI5 | Banbueng10 | pi5.timestamp:', new Date(chg.pi5.timestamp).toLocaleString());
+}
+
+  // ✅ ถ้า modal ของ station นี้ถูกเปิดอยู่ → update UI ทันที
+  if (selectedStationId === stationId) {
+  const pi5StatusText = chg.pi5.status === 1 ? 'Online' : 'Offline';
+  document.getElementById('statusPi5').textContent = pi5StatusText;
+  const pi5Led = document.getElementById('statusPi5Led');
+  pi5Led.classList.toggle('green-led', chg.pi5.status === 1);
+  pi5Led.classList.toggle('red-led', chg.pi5.status !== 1);
+
+
+    if (chg.pi5.timestamp) {
+      updateStatusTimestamp(chg.pi5.timestamp, 'statusPi5Update');
+    } else {
+      document.getElementById('statusPi5Update').innerText = 'อัปเดตเมื่อ -';
+    }
+  }
+}
+
+
+
+
+
+mqttClient.on('message', (topic, message) => {
+  if (topic.endsWith('/heartbeatPI5')) {
+    handlePi5HeartbeatMessage(topic, message.toString());
+  }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        function closeStationModal() {
+  currentStationId = null;
+  document.getElementById("stationModal").style.display = "none";
+  document.getElementById("modalBackdrop").style.display = "none";
+
+  // 🔓 ปลดล็อก scroll
+  document.body.classList.remove("modal-open");
+}
+
+
+function updateStatusTimestamp(timestamp, elementId) {
+    console.log(`📝 updateStatusTimestamp called for ${elementId} with:`, timestamp); // ✅ log
+    const el = document.getElementById(elementId);
+  if (!el) return;
+
+  const date = new Date(timestamp);
+  const formatted = date.toLocaleDateString('th-TH', {
+    day: '2-digit',
+    month: '2-digit',
+    year: '2-digit'
+  }) + ' ' + date.toLocaleTimeString('th-TH', {
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit'
+  });
+
+  el.innerText = `อัปเดตเมื่อ ${formatted}`;
+}
+
+
+        function formatRelativeTime(date) {
+            const diff = (Date.now() - new Date(date)) / 1000;
+            if (diff < 60) return `${Math.floor(diff)} วินาทีที่แล้ว`;
+            if (diff < 3600) return `${Math.floor(diff / 60)} นาทีที่แล้ว`;
+            const d = new Date(date);
+            return `${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')} น.`;
+        }
+
+        function updateEdgeboxStatus(status) {
+            const led = document.getElementById('statusEdgeboxLed');
+            const statusText = document.getElementById('statusEdgebox');
+
+            if (status === 'Online') {
+                led.classList.add('green-led');
+                led.classList.remove('red-led');
+                statusText.innerText = 'Online';
+            } else {
+                led.classList.add('red-led');
+                led.classList.remove('green-led');
+                statusText.innerText = 'Offline';
+            }
+        }
+
+        const now = new Date();
+        document.getElementById('statusPower1').textContent = '400V';
+        document.getElementById('statusPower1').setAttribute('title', `อัปเดตล่าสุด: ${now.toLocaleString('th-TH')}`);
+        document.querySelector('#statusPower1').insertAdjacentHTML('afterend',
+            `<small class="status-time">${formatRelativeTime(now)}</small>`);
+
+
+        document.addEventListener('click', function (e) {
+            if (!document.querySelector('.search-box').contains(e.target)) {
+                suggestionBox.style.display = 'none';
+            }
+        });
+
+        const notifications = [];
+
+        document.getElementById('notifyBtn').addEventListener('click', () => {
+            const dropdown = document.getElementById('notifyDropdown');
+            dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+        });
+
+        document.addEventListener('click', function (e) {
+            const dropdown = document.getElementById('notifyDropdown');
+            const btn = document.getElementById('notifyBtn');
+            if (!btn.contains(e.target)) {
+                dropdown.style.display = 'none';
+            }
+        });
+
+        function addNotification(stationName) {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('th-TH', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+
+            const message = `🚫 ${stationName} offline @ ${timeStr}`;
+            notifications.unshift(message);
+
+            const dropdown = document.getElementById('notifyDropdown');
+            dropdown.innerHTML = notifications.map(item => `<li>${item}</li>`).join('');
+
+            const badge = document.getElementById('notifyCount');
+            badge.style.display = 'inline-block';
+            badge.textContent = notifications.length;
+        }
+
+
+        //const stationStatusMap = {}; // ใช้เก็บสถานะล่าสุดแบบ key = topic
+        //const socket = new WebSocket("ws://localhost:8080");
+
+        //socket.addEventListener("open", () => {
+  //console.log("✅ WebSocket connected.");
+  //socket.send(JSON.stringify({ id: 'ST001' }));
+//});
+
+ws.addEventListener("message", (event) => {
+  try {
+    const data = JSON.parse(event.data);
+    console.log("📡 Received data:", data);
+
+    if (data.type === "info") {
+      console.log("ℹ️ Info:", data.message);
+      return;
+    }
+
+   
+    let id = data.id ? String(data.id) : null;
+
+if (!id && data.topic) {
+  const meta = stationMetaMap[data.topic];
+  if (meta) {
+    id = String(meta.frontendId);
+  } else {
+    console.warn("❗ ไม่สามารถหา stationId จาก topic:", data.topic);
+    return;  // หรือจัดการกรณีไม่เจอ id ตามต้องการ
+  }
+}
+
+
+if (currentStationId === id) {
+  document.getElementById("stationTemp").innerText = data.temp ?? "-";
+  document.getElementById("statusEdgebox").innerText = data.heartbeat === 1 ? "Online" : "Offline";
+}
+
+
+    updateStatusCount(); // ⬅️ เรียกฟังก์ชันที่อยู่นอก
+  } catch (err) {
+    console.warn("Received non-JSON message:", event.data);
+  }
+});
+
+function showStationModal(stationId) {
+  currentStationId = stationId;
+  const data = stationStatusMap[stationId] ?? {};
+
+  document.getElementById("stationName").innerText = stationId;
+  document.getElementById("stationTemp").innerText = data.temp ?? "-";
+  document.getElementById("statusEdgebox").innerText = data.heartbeat === 1 ? "Online" : "Offline";
+
+  document.getElementById("stationModal").style.display = "flex";
+}
+
+window.addEventListener('load', () => {
+  fetchPowerModuleAndUpdateMiniBar();           // ✅ โหลดครั้งแรก
+  setInterval(fetchPowerModuleAndUpdateMiniBar, 60_000);  // ✅ โหลดซ้ำทุก 60 วิ
+});
+
+        
+    </script>
+
+    <audio id="alertSound" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg" preload="auto"></audio>
+    <div id="toast-container"></div>
+</body>
+</html>
