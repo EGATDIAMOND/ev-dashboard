@@ -1336,5 +1336,44 @@ body.modal-open {
   body::-webkit-scrollbar {
     display: none;                  /* Chrome, Safari */
   }
+
+  .status-toggle-panel {
+  width: 90vw;
+  left: 5vw;
+  right: 5vw;
+  bottom: 12px;
+  max-height: 50vh;
+  border-radius: 10px;
 }
+
+.status-body {
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: 240px;
+  padding: 10px;
+}
+
+.status-panel-section {
+  overflow-x: hidden;
+  max-height: 100px;
+}
+
+.mini-status-item {
+  width: 60px;
+  padding: 4px;
+  font-size: 11px;
+}
+
+.mini-status-item .material-icons {
+  font-size: 16px;
+}
+
+}
+
+html, body {
+  width: 100vw;
+  overflow-x: hidden;
+}
+
 
