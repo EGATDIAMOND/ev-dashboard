@@ -1003,8 +1003,10 @@ function updatePi5Status(status) {
 async function batchFetchPowerModules() {
   for (const chg of evChargers) {
     try {
-      const apiHost = window.location.hostname;
-      const res = await fetch(`http://${apiHost}:3000/api/powermodule?stationId=${chg.id}`);
+      /*const apiHost = window.location.hostname;
+      const res = await fetch(`http://${apiHost}:3000/api/powermodule?stationId=${chg.id}`);*/
+      const baseUrl = window.location.origin;
+      const res = await fetch(`${baseUrl}/api/powermodule?stationId=${chg.id}`);
       if (!res.ok) continue;
 
       const data = await res.json();
@@ -1044,8 +1046,10 @@ if (!isValid) {
 
 async function fetchAllPowerModules() {
   try {
-    const apiHost = window.location.hostname;
-    const res = await fetch(`http://${apiHost}:3000/api/powermodule/all`);
+    /*const apiHost = window.location.hostname;
+    const res = await fetch(`http://${apiHost}:3000/api/powermodule/all`);*/
+    const baseUrl = window.location.origin;
+    const res = await fetch(`${baseUrl}/api/powermodule/all`);
     if (!res.ok) throw new Error("โหลดข้อมูล Power Module ไม่สำเร็จ");
 
     const data = await res.json();
@@ -1685,8 +1689,10 @@ function updateMiniBarPmStatus(dataFromApi) {
 async function fetchPowerModule(stationId) {
   try {
     console.log("🛠 เริ่ม fetchPowerModule:", stationId);
-    const apiHost = window.location.hostname;
-    const res = await fetch(`http://${apiHost}:3000/api/powermodule?stationId=${stationId}`);
+    /*const apiHost = window.location.hostname;
+    const res = await fetch(`http://${apiHost}:3000/api/powermodule?stationId=${stationId}`);*/
+    const baseUrl = window.location.origin;
+    const res = await fetch(`${baseUrl}/api/powermodule?stationId=${stationId}`);
 
     console.log("🔗 API Response status:", res.status);
 
