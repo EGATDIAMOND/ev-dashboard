@@ -493,8 +493,9 @@ try {
         let currentStationId = null;
         
 
+        const ws = new WebSocket("wss://ev-dashboard-mp5b.onrender.com/socket");
 
-        const ws = new WebSocket("wss://ev-dashboard-mp5b.onrender.com");
+        /*const ws = new WebSocket("wss://ev-dashboard-mp5b.onrender.com");*/
         const stationStatusMap = {};
 
 
