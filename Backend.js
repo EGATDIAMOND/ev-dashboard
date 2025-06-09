@@ -2277,6 +2277,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors'); // ✅ เพิ่มตรงนี้
 const path = require('path');
+const http = require('http'); // ✅ ต้องมีตรงนี้
+const { WebSocketServer } = require('ws');
 const app = express();
 
 app.use(cors()); // ✅ เปิด CORS ทุก origin
