@@ -1405,7 +1405,7 @@ const wsConnections = new WeakMap();
 const MQTT_BROKER = 'mqtt://212.80.215.42:1883';
 const client = mqtt.connect(MQTT_BROKER);
 
-const wss = new WebSocket.Server({ port: 8080, host: '0.0.0.0' });
+/*const wss = new WebSocket.Server({ port: 8080, host: '0.0.0.0' });*/
 
 wss.on('connection', function connection(ws) {
   console.log('✅ Client connected to WebSocket');
@@ -2423,9 +2423,27 @@ app.use((req, res, next) => {
 
 
 
+
+
 // ✅ เริ่ม server
-app.listen(3000, () => {
+/*app.listen(3000, () => {
   console.log('🚀 Server running on http://localhost:3000');
+});*/
+
+const http = require('http');
+const { WebSocketServer } = require('ws');
+
+const server = http.createServer(app);
+const wss = new WebSocketServer({ server });
+
+wss.on('connection', (ws) => {
+  console.log('🔌 WebSocket client connected');
+  ws.send('🎉 Hello from WSS on Render!');
+});
+
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => {
+  console.log(`🚀 Server + WebSocket running on port ${PORT}`);
 });
 
 
