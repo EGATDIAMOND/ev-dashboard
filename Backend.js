@@ -2173,7 +2173,7 @@ client.on("message", (topic, message) => {
 
 
 wss.on('connection', ws => {
-  wsConnections[ws];
+  wsConnections.set(ws, { connectedAt: Date.now() });
   console.log('🔌 New client connected');
   ws.send(JSON.stringify({ type: "info", message: "Connected to EV Dashboard WebSocket" }));
 
