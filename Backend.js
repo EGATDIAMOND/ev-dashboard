@@ -2431,11 +2431,10 @@ app.use((req, res, next) => {
   console.log('🚀 Server running on http://localhost:3000');
 });*/
 
-const http = require('http');
+/*const http = require('http');
 const { WebSocketServer } = require('ws');
 
 const server = http.createServer(app);
-/*const wss = new WebSocketServer({ server });*/
 const wss = new WebSocketServer({ server, path: "/socket" });
 
 wss.on('connection', ws => {
@@ -2480,6 +2479,57 @@ wss.on('error', err => {
 wss.on('connection', (ws) => {
   console.log('🔌 WebSocket client connected');
   ws.send('🎉 Hello from WSS on Render!');
+});
+
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => {
+  console.log(`🚀 Server + WebSocket running on port ${PORT}`);
+});
+*/
+
+const server = http.createServer(app);
+const wss = new WebSocketServer({ server, path: "/socket" });
+
+/*const wsConnections = new Map(); // ✅ หากยังไม่ได้ประกาศ ต้องเพิ่มไว้ด้านบน*/
+
+wss.on('connection', ws => {
+  console.log('🔌 New client connected');
+
+  // ✅ สร้าง Set สำหรับเก็บสถานีที่ subscribe
+  if (!wsConnections.has(ws)) {
+    wsConnections.set(ws, new Set());
+  }
+
+  ws.send(JSON.stringify({
+    type: "info",
+    message: "Connected to EV Dashboard WebSocket"
+  }));
+
+  ws.on('message', message => {
+    try {
+      const data = JSON.parse(message);
+      const stationId = Object.entries(stationMetaMap).find(
+        ([_, meta]) => meta.frontendId === data.id
+      )?.[0];
+
+      if (!stationId) return;
+
+      wsConnections.get(ws).add(stationId);
+      console.log(`📝 Client subscribed to station ${stationId}`);
+
+    } catch (err) {
+      console.error('❌ Error parsing client message:', err.message);
+    }
+  });
+
+  ws.on('close', () => {
+    console.log('❎ WebSocket client disconnected');
+    wsConnections.delete(ws); // ✅ ลบออกจาก Map
+  });
+});
+
+wss.on('error', err => {
+  console.error('❌ WebSocket Server Error:', err.message);
 });
 
 const PORT = process.env.PORT || 3000;
