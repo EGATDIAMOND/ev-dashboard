@@ -1400,7 +1400,7 @@ const stationMetaMap = {
 const mqtt = require('mqtt');
 const WebSocket = require('ws');
 
-const wsConnections = new WeakMap();
+//const wsConnections = new WeakMap();
 
 const MQTT_BROKER = 'mqtt://212.80.215.42:1883';
 const client = mqtt.connect(MQTT_BROKER);
@@ -2492,7 +2492,7 @@ server.listen(PORT, () => {
 const server = http.createServer(app);
 const wss = new WebSocketServer({ server, path: "/socket" });
 
-/*const wsConnections = new Map(); // ✅ หากยังไม่ได้ประกาศ ต้องเพิ่มไว้ด้านบน*/
+const wsConnections = new Map(); // ✅ หากยังไม่ได้ประกาศ ต้องเพิ่มไว้ด้านบน*/
 
 wss.on('connection', ws => {
   console.log('🔌 New client connected');
