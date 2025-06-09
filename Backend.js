@@ -2434,7 +2434,9 @@ const http = require('http');
 const { WebSocketServer } = require('ws');
 
 const server = http.createServer(app);
-const wss = new WebSocketServer({ server });
+/*const wss = new WebSocketServer({ server });*/
+const wss = new WebSocketServer({ server, path: "/socket" });
+
 
 wss.on('connection', (ws) => {
   console.log('🔌 WebSocket client connected');
