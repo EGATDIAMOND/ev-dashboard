@@ -1407,10 +1407,10 @@ const client = mqtt.connect(MQTT_BROKER);
 
 /*const wss = new WebSocket.Server({ port: 8080, host: '0.0.0.0' });*/
 
-wss.on('connection', function connection(ws) {
+/*wss.on('connection', function connection(ws) {
   console.log('✅ Client connected to WebSocket');
   ws.send('Hello from WebSocket server!');
-});
+});*/
 
 
 
