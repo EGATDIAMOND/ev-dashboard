@@ -1982,6 +1982,7 @@ const stationTimestamps = {};
 
 
 
+
 function getStationIdFromTopic(topic) {
   // 🔍 ตรวจ exact match ก่อน
   for (const stationId in stationMetaMap) {
@@ -2172,7 +2173,7 @@ client.on("message", (topic, message) => {
 
 
 
-wss.on('connection', ws => {
+/*wss.on('connection', ws => {
   wsConnections.set(ws, { connectedAt: Date.now() });
   console.log('🔌 New client connected');
   ws.send(JSON.stringify({ type: "info", message: "Connected to EV Dashboard WebSocket" }));
@@ -2208,7 +2209,7 @@ wss.on('connection', ws => {
 
 wss.on('error', err => {
   console.error('❌ WebSocket Server Error:', err.message);
-});
+});*/
 
 
 
@@ -2436,6 +2437,44 @@ const { WebSocketServer } = require('ws');
 const server = http.createServer(app);
 /*const wss = new WebSocketServer({ server });*/
 const wss = new WebSocketServer({ server, path: "/socket" });
+
+wss.on('connection', ws => {
+  wsConnections.set(ws, { connectedAt: Date.now() });
+  console.log('🔌 New client connected');
+  ws.send(JSON.stringify({ type: "info", message: "Connected to EV Dashboard WebSocket" }));
+
+
+  ws.on('message', message => {
+    try {
+      const data = JSON.parse(message);
+      const stationId = Object.entries(stationMetaMap).find(
+        ([_, meta]) => meta.frontendId === data.id
+      )?.[0];
+      
+      if (!stationId) return;
+      
+      if (!wsConnections.has(ws)) {
+        wsConnections.set(ws, new Set());
+      }
+      
+      wsConnections.get(ws).add(stationId);
+      
+      console.log(`📝 Client subscribed to station ${stationId}`);
+      
+    } catch (err) {
+      console.error('❌ Error parsing client message:', err.message);
+    }
+  });
+
+  ws.on('close', () => {
+    console.log('❎ WebSocket client disconnected');
+    delete wsConnections[ws.id];
+  });
+});
+
+wss.on('error', err => {
+  console.error('❌ WebSocket Server Error:', err.message);
+});
 
 
 wss.on('connection', (ws) => {
