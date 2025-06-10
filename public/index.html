@@ -2103,18 +2103,7 @@ window.addEventListener('load', () => {
   setInterval(fetchPowerModuleAndUpdateMiniBar, 60_000);  // ✅ โหลดซ้ำทุก 60 วิ
 });
 
-function openStationModal(stationId) {
-  document.getElementById("stationModal").style.display = "block";
-  document.getElementById("modalOverlay").style.display = "block";
-  document.body.style.overflow = "hidden"; // ป้องกัน scroll ด้านหลัง
-}
 
-
-function closeStationModal() {
-  document.getElementById("stationModal").style.display = "none";
-  document.getElementById("modalOverlay").style.display = "none";
-  document.body.style.overflow = ""; // คืน scroll
-}
 
 
         
@@ -2122,6 +2111,6 @@ function closeStationModal() {
 
     <audio id="alertSound" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg" preload="auto"></audio>
     <div id="toast-container"></div>
-     <div id="modalOverlay"></div>
+    
 </body>
 </html>
