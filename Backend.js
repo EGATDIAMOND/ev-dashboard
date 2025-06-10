@@ -973,7 +973,7 @@ const stationMetaMap = {
     topic: "OCPP/Phutthamonthon3/heartbeat",
     pi5Topic: "OCPP/Phutthamonthon3/heartbeatPI5",
     powerModuleTopic: "OCPP/Phutthamonthon3/PowerModule",  // ✅ เพิ่ม field แยก
-    tempTopic: "BanPo3"
+    tempTopic: "Phutthamonthon3"
       },"ST0116": {
     frontendId: 116,
     mqttName: "Phutthamonthon4",
@@ -1021,7 +1021,7 @@ const stationMetaMap = {
     topic: "OCPP/Elex_Rama2km26_1/heartbeat",
     pi5Topic: "OCPP/Rama2km26/heartbeatPI5",
     powerModuleTopic: "OCPP/Rama2km26/PowerModule",  // ✅ เพิ่ม field แยก
-    tempTopic: "BanPo3"
+    tempTopic: "Rama2km26"
       },"ST0122": {
     frontendId: 122,
     mqttName: "Rama2km53",
@@ -1029,7 +1029,7 @@ const stationMetaMap = {
     topic: "OCPP/Elex_Rama2km53_1/heartbeat",
     pi5Topic: "OCPP/Rama2km53/heartbeatPI5",
     powerModuleTopic: "OCPP/Rama2km53/PowerModule",  // ✅ เพิ่ม field แยก
-    tempTopic: "BanPo3"
+    tempTopic: "Rama2km53"
       },"ST0123": {
     frontendId: 123,
     mqttName: "Saraphi2",
@@ -1037,7 +1037,7 @@ const stationMetaMap = {
     topic: "OCPP/Saraphi2/heartbeat",
     pi5Topic: "OCPP/Saraphi2/heartbeatPI5",
     powerModuleTopic: "OCPP/Saraphi2/PowerModule",  // ✅ เพิ่ม field แยก
-    tempTopic: "BanPo3"
+    tempTopic: "Saraphi2"
       },"ST0124": {
     frontendId: 124,
     mqttName: "Sangkha3",
@@ -1045,7 +1045,7 @@ const stationMetaMap = {
     topic: "OCPP/PT_Sangkha3/heartbeat",
     pi5Topic: "OCPP/Sangkha3/heartbeatPI5",
     powerModuleTopic: "OCPP/Sangkha3/PowerModule",  // ✅ เพิ่ม field แยก
-    tempTopic: "BanPo3"
+    tempTopic: "Sangkha3"
       },"ST0125": {
     frontendId: 125,
     mqttName: "SamRoiYot1",
@@ -1053,7 +1053,7 @@ const stationMetaMap = {
     topic: "OCPP/Elex_DC_PT_SamRoiYot1_1/heartbeat",
     pi5Topic: "OCPP/SamRoiYot1/heartbeatPI5",
     powerModuleTopic: "OCPP/SamRoiYot1/PowerModule",  // ✅ เพิ่ม field แยก
-    tempTopic: "BanPo3"
+    tempTopic: "SamRoiYot1"
       },"ST0126": {
     frontendId: 126,
     mqttName: "Samutsongkhram4",
@@ -1061,7 +1061,7 @@ const stationMetaMap = {
     topic: "OCPP/Elex_Samutsongkhram4_1/heartbeat",
     pi5Topic: "OCPP/Samutsongkhram4/heartbeatPI5",
     powerModuleTopic: "OCPP/Samutsongkhram4/PowerModule",  // ✅ เพิ่ม field แยก
-    tempTopic: "BanPo3"
+    tempTopic: "Samutsongkhram4"
       },
       "ST0127": {
     frontendId: 127,
@@ -1070,7 +1070,7 @@ const stationMetaMap = {
     topic: "OCPP/EleX_PT100_SaphanSung_DC_1/heartbeat",
     pi5Topic: "OCPP/SaphanSung/heartbeatPI5",
     powerModuleTopic: "OCPP/SaphanSung/PowerModule",  // ✅ เพิ่ม field แยก
-    tempTopic: "BanPo3"
+    tempTopic: "SaphanSung"
       },
       "ST0128": {
     frontendId: 128,
@@ -1079,7 +1079,7 @@ const stationMetaMap = {
     topic: "OCPP/Elex_PT_SamKhok3_1/heartbeat",
     pi5Topic: "OCPP/SamKhok3/heartbeatPI5",
     powerModuleTopic: "OCPP/SamKhok3/PowerModule",  // ✅ เพิ่ม field แยก
-    tempTopic: "BanPo3"
+    tempTopic: "SamKhok3"
       },
       "ST0129": {
     frontendId: 129,
@@ -1088,7 +1088,7 @@ const stationMetaMap = {
     topic: "OCPP/EleX_Samutprakan2_DC_1/heartbeat",
     pi5Topic: "OCPP/Samutprakan2/heartbeatPI5",
     powerModuleTopic: "OCPP/Samutprakan2/PowerModule",  // ✅ เพิ่ม field แยก
-    tempTopic: "BanPo3"
+    tempTopic: "Samutprakan2"
       },
       "ST0130": {
     frontendId: 130,
@@ -1097,7 +1097,7 @@ const stationMetaMap = {
     topic: "OCPP/PT100_Samutprakan5_DC_1/heartbeat",
     pi5Topic: "OCPP/Samutprakan5/heartbeatPI5",
     powerModuleTopic: "OCPP/Samutprakan5/PowerModule",  // ✅ เพิ่ม field แยก
-    tempTopic: "BanPo3"
+    tempTopic: "Samutprakan5"
       },
       "ST0131": {
     frontendId: 131,
@@ -1106,7 +1106,7 @@ const stationMetaMap = {
     topic: "OCPP/PT100_SanKamphaeng6/heartbeat",
     pi5Topic: "OCPP/SanKamphaeng6/heartbeatPI5",
     powerModuleTopic: "OCPP/SanKamphaeng6/PowerModule",  // ✅ เพิ่ม field แยก
-    tempTopic: "BanPo3"
+    tempTopic: "SanKam6"
       },
       "ST0132": {
     frontendId: 132,
@@ -1115,7 +1115,7 @@ const stationMetaMap = {
     topic: "OCPP/SanSai4/heartbeat",
     pi5Topic: "OCPP/SanSai4/heartbeatPI5",
     powerModuleTopic: "OCPP/SanSai4/PowerModule",  // ✅ เพิ่ม field แยก
-    tempTopic: "BanPo3"
+    tempTopic: "SanSai4"
       },
       "ST0133": {
     frontendId: 133,
@@ -1124,7 +1124,7 @@ const stationMetaMap = {
     topic: "OCPP/Elex_SuwinthawonKm28_1/heartbeat",
     pi5Topic: "OCPP/SuwinthawonKm28/heartbeatPI5",
     powerModuleTopic: "OCPP/SuwinthawonKm28/PowerModule",  // ✅ เพิ่ม field แยก
-    tempTopic: "BanPo3"
+    tempTopic: "SuwinthawonKm28"
       },
       "ST0134": {
     frontendId: 134,
@@ -1133,7 +1133,7 @@ const stationMetaMap = {
     topic: "OCPP/Elex_DC_PT_Swangweerawong_1/heartbeat",
     pi5Topic: "OCPP/Swangweerawong/heartbeatPI5",
     powerModuleTopic: "OCPP/Swangweerawong/PowerModule",  // ✅ เพิ่ม field แยก
-    tempTopic: "BanPo3"
+    tempTopic: "Swangweerawong"
       },
       "ST0135": {
     frontendId: 135,
@@ -1142,7 +1142,7 @@ const stationMetaMap = {
     topic: "OCPP/PT_Sikhio1/heartbeat",
     pi5Topic: "OCPP/Sikhio1/heartbeatPI5",
     powerModuleTopic: "OCPP/Sikhio1/PowerModule",  // ✅ เพิ่ม field แยก
-    tempTopic: "BanPo3"
+    tempTopic: "Sikhio"
       },
       "ST0136": {
     frontendId: 136,
@@ -1151,7 +1151,7 @@ const stationMetaMap = {
     topic: "OCPP/EleX_PT100_Sikhio6_1/heartbeat",
     pi5Topic: "OCPP/Sikhio6/heartbeatPI5",
     powerModuleTopic: "OCPP/Sikhio6/PowerModule",  // ✅ เพิ่ม field แยก
-    tempTopic: "BanPo3"
+    tempTopic: "Sikhio6"
       },
 
 
@@ -1162,7 +1162,7 @@ const stationMetaMap = {
     topic: "OCPP/PT100_Siracha7/heartbeat",
     pi5Topic: "OCPP/Siracha7/heartbeatPI5",
     powerModuleTopic: "OCPP/Siracha7/PowerModule",  // ✅ เพิ่ม field แยก
-    tempTopic: "BanPo3"
+    tempTopic: "Siracha7"
       },
 
 
@@ -1182,7 +1182,7 @@ const stationMetaMap = {
     topic: "OCPP/SNR/heartbeat",
     pi5Topic: "OCPP/SNR1/heartbeatPI5",
     powerModuleTopic: "OCPP/SNR1/PowerModule",  // ✅ เพิ่ม field แยก
-    tempTopic: "BanPo3"
+    tempTopic: "SNR1"
       },
       "ST0140": {
     frontendId: 140,
@@ -1191,7 +1191,7 @@ const stationMetaMap = {
     topic: "OCPP/PT100_SopPrap_DC_1/heartbeat",
     pi5Topic: "OCPP/SopPrap/heartbeatPI5",
     powerModuleTopic: "OCPP/SopPrap/PowerModule",  // ✅ เพิ่ม field แยก
-    tempTopic: "BanPo3"
+    tempTopic: "SopPrap"
       },
       "ST0141": {
     frontendId: 141,
@@ -1200,7 +1200,7 @@ const stationMetaMap = {
     topic: "OCPP/EleX_TaSai2_1/heartbeat",
     pi5Topic: "OCPP/TaSai2/heartbeatPI5",
     powerModuleTopic: "OCPP/TaSai2/PowerModule",  // ✅ เพิ่ม field แยก
-    tempTopic: "BanPo3"
+    tempTopic: "TaSai2"
       },
       "ST0142": {
     frontendId: 142,
@@ -1209,7 +1209,7 @@ const stationMetaMap = {
     topic: "OCPP/EleX_PT100_Tak2_1/heartbeat",
     pi5Topic: "OCPP/Tak2/heartbeatPI5",
     powerModuleTopic: "OCPP/Tak2/PowerModule",  // ✅ เพิ่ม field แยก
-    tempTopic: "BanPo3"
+    tempTopic: "Tak2"
       },
       "ST0143": {
     frontendId: 143,
@@ -1218,7 +1218,7 @@ const stationMetaMap = {
     topic: "OCPP/Taphong3/heartbeat",
     pi5Topic: "OCPP/Taphong3/heartbeatPI5",
     powerModuleTopic: "OCPP/Taphong3/PowerModule",  // ✅ เพิ่ม field แยก
-    tempTopic: "BanPo3"
+    tempTopic: "Taphong3"
       },
       "ST0144": {
     frontendId: 144,
@@ -1227,7 +1227,7 @@ const stationMetaMap = {
     topic: "OCPP/Elex_DC_PT_ThaMaka3_1/heartbeat",
     pi5Topic: "OCPP/ThaMaka3/heartbeatPI5",
     powerModuleTopic: "OCPP/ThaMaka3/PowerModule",  // ✅ เพิ่ม field แยก
-    tempTopic: "BanPo3"
+    tempTopic: "ThaMaka3"
       },
       "ST0145": {
     frontendId: 145,
@@ -1236,7 +1236,7 @@ const stationMetaMap = {
     topic: "OCPP/ThanonChaoKhunThahan3/heartbeat",
     pi5Topic: "OCPP/ThanonChaoKhunThahan3/heartbeatPI5",
     powerModuleTopic: "OCPP/ThanonChaoKhunThahan3/PowerModule",  // ✅ เพิ่ม field แยก
-    tempTopic: "BanPo3"
+    tempTopic: "ThanonChaoKhunThahan3"
       },
       "ST0146": {
     frontendId: 146,
@@ -1245,7 +1245,7 @@ const stationMetaMap = {
     topic: "OCPP/Elex_PT100_ThanonRatUthit2_1/heartbeat",
     pi5Topic: "OCPP/ThanonRatUthit2/heartbeatPI5",
     powerModuleTopic: "OCPP/ThanonRatUthit2/PowerModule",  // ✅ เพิ่ม field แยก
-    tempTopic: "BanPo3"
+    tempTopic: "ThanonRatUthit2"
       },
       "ST0147": {
     frontendId: 147,
@@ -1254,7 +1254,7 @@ const stationMetaMap = {
     topic: "OCPP/PT100_ThanonSukprayu1/heartbeat",
     pi5Topic: "OCPP/ThanonSukprayu1/heartbeatPI5",
     powerModuleTopic: "OCPP/ThanonSukprayu1/PowerModule",  // ✅ เพิ่ม field แยก
-    tempTopic: "BanPo3"
+    tempTopic: "Prayu1"
       },
       "ST0148": {
     frontendId: 148,
@@ -1263,7 +1263,7 @@ const stationMetaMap = {
     topic: "OCPP/ThanonPhutthaBucha1/heartbeat",
     pi5Topic: "OCPP/ThanonPhutthaBucha1/heartbeatPI5",
     powerModuleTopic: "OCPP/ThanonPhutthaBucha1/PowerModule",  // ✅ เพิ่ม field แยก
-    tempTopic: "BanPo3"
+    tempTopic: "ThanonPhutthaBucha1"
       },
       "ST0149": {
     frontendId: 149,
@@ -1272,7 +1272,7 @@ const stationMetaMap = {
     topic: "OCPP/Thanon_Chan/heartbeat",
     pi5Topic: "OCPP/ThanonChan/heartbeatPI5",
     powerModuleTopic: "OCPP/ThanonChan/PowerModule",  // ✅ เพิ่ม field แยก
-    tempTopic: "BanPo3"
+    tempTopic: "ThanonChan"
       },
       "ST0150": {
     frontendId: 150,
@@ -1281,7 +1281,7 @@ const stationMetaMap = {
     topic: "OCPP/EleX_Thepharak2_DC_1/heartbeat",
     pi5Topic: "OCPP/Thepharak2/heartbeatPI5",
     powerModuleTopic: "OCPP/Thepharak2/PowerModule",  // ✅ เพิ่ม field แยก
-    tempTopic: "BanPo3"
+    tempTopic: "Theparak2"
       },
       "ST0151": {
     frontendId: 151,
@@ -1290,7 +1290,7 @@ const stationMetaMap = {
     topic: "OCPP/Thepharak4/heartbeat",
     pi5Topic: "OCPP/Thepharak4/heartbeatPI5",
     powerModuleTopic: "OCPP/Thepharak4/PowerModule",  // ✅ เพิ่ม field แยก
-    tempTopic: "BanPo3"
+    tempTopic: "Theparak4"
       },
       "ST0152": {
     frontendId: 152,
@@ -1299,7 +1299,7 @@ const stationMetaMap = {
     topic: "OCPP/PT100_Thoen3/heartbeat",
     pi5Topic: "OCPP/Thoen3/heartbeatPI5",
     powerModuleTopic: "OCPP/Thoen3/PowerModule",  // ✅ เพิ่ม field แยก
-    tempTopic: "BanPo3"
+    tempTopic: "Thoen3"
       },
       "ST0153": {
     frontendId: 153,
@@ -1308,7 +1308,7 @@ const stationMetaMap = {
     topic: "OCPP/Elex_Thungtako1_1/heartbeat",
     pi5Topic: "OCPP/Thungtako1/heartbeatPI5",
     powerModuleTopic: "OCPP/Thungtako1/PowerModule",  // ✅ เพิ่ม field แยก
-    tempTopic: "BanPo3"
+    tempTopic: "Thungtako1"
       },
       "ST0154": {
     frontendId: 154,
@@ -1317,7 +1317,7 @@ const stationMetaMap = {
     topic: "OCPP/PT_UdonThani_1/heartbeat",
     pi5Topic: "OCPP/UdonThani/heartbeatPI5",
     powerModuleTopic: "OCPP/UdonThani/PowerModule",  // ✅ เพิ่ม field แยก
-    tempTopic: "BanPo3"
+    tempTopic: "UdonThani5"
       },
       "ST0155": {
     frontendId: 155,
@@ -1326,7 +1326,7 @@ const stationMetaMap = {
     topic: "OCPP/PT100_Uttaradit/heartbeat",
     pi5Topic: "OCPP/Uttaradit/heartbeatPI5",
     powerModuleTopic: "OCPP/Uttaradit/PowerModule",  // ✅ เพิ่ม field แยก
-    tempTopic: "BanPo3"
+    tempTopic: "Radit1"
       },
       "ST0156": {
     frontendId: 156,
@@ -1335,7 +1335,7 @@ const stationMetaMap = {
     topic: "OCPP/PT_UThai/heartbeat",
     pi5Topic: "OCPP/UThai/heartbeatPI5",
     powerModuleTopic: "OCPP/UThai/PowerModule",  // ✅ เพิ่ม field แยก
-    tempTopic: "BanPo3"
+    tempTopic: "Uthai1"
       },
       "ST0157": {
     frontendId: 157,
@@ -1344,7 +1344,7 @@ const stationMetaMap = {
     topic: "OCPP/Vibhavadi/heartbeat",
     pi5Topic: "OCPP/VibhavadiRangsit1/heartbeatPI5",
     powerModuleTopic: "OCPP/VibhavadiRangsit1/PowerModule",  // ✅ เพิ่ม field แยก
-    tempTopic: "BanPo3"
+    tempTopic: "Vibhavadi"
       },
       "ST0158": {
     frontendId: 158,
@@ -1353,7 +1353,7 @@ const stationMetaMap = {
     topic: "OCPP/Elex_DC_PT_Wachirabarami1_1/heartbeat",
     pi5Topic: "OCPP/Wachirabarami1/heartbeatPI5",
     powerModuleTopic: "OCPP/Wachirabarami1/PowerModule",  // ✅ เพิ่ม field แยก
-    tempTopic: "BanPo3"
+    tempTopic: "Wachirabarami1"
       },
       "ST0159": {
     frontendId: 159,
@@ -1362,7 +1362,7 @@ const stationMetaMap = {
     topic: "OCPP/PT_Wangnoi3/heartbeat",
     pi5Topic: "OCPP/Wangnoi3/heartbeatPI5",
     powerModuleTopic: "OCPP/Wangnoi3/PowerModule",  // ✅ เพิ่ม field แยก
-    tempTopic: "BanPo3"
+    tempTopic: "Wangnoi3"
       },
       "ST0160": {
     frontendId: 160,
@@ -1371,7 +1371,7 @@ const stationMetaMap = {
     topic: "OCPP/PT_Wangnoi4/heartbeat",
     pi5Topic: "OCPP/Wangnoi4/heartbeatPI5",
     powerModuleTopic: "OCPP/Wangnoi4/PowerModule",  // ✅ เพิ่ม field แยก
-    tempTopic: "BanPo3"
+    tempTopic: "Wangnoi4"
       },
       "ST0161": {
     frontendId: 161,
@@ -1380,7 +1380,7 @@ const stationMetaMap = {
     topic: "OCPP/Elex_DC_PT_Wattananakhon3_1/heartbeat",
     pi5Topic: "OCPP/Wattananakhon3/heartbeatPI5",
     powerModuleTopic: "OCPP/Wattananakhon3/PowerModule",  // ✅ เพิ่ม field แยก
-    tempTopic: "BanPo3"
+    tempTopic: "Wattananakhon3"
       },
       "ST0162": {
     frontendId: 162,
@@ -1389,7 +1389,7 @@ const stationMetaMap = {
     topic: "OCPP/Yasothon/heartbeat",
     pi5Topic: "OCPP/Yasothon/heartbeatPI5",
     powerModuleTopic: "OCPP/Yasothon/PowerModule",  // ✅ เพิ่ม field แยก
-    tempTopic: "BanPo3"
+    tempTopic: "Yasothon"
       },
       
       
