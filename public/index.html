@@ -571,7 +571,7 @@ function updateOfflineListPanel() {
   chargerMarkers.forEach(chg => {
     if (chg.edgebox?.heartbeat !== 1) {
       const li = document.createElement("li");
-      li.className = "offline-item";
+      //li.className = "offline-item";
       li.innerHTML = `${chg.name} <span class="status-fail">Offline</span>`;
       li.addEventListener("click", () => {
         map.setView(chg.latlng, 16);
@@ -582,7 +582,7 @@ function updateOfflineListPanel() {
 
     if (chg.pi5?.status !== 1) {
       const li = document.createElement("li");
-      li.className = "offline-item";
+      //li.className = "offline-item";
       li.innerHTML = `${chg.name} <span class="status-fail">Offline</span>`;
       li.addEventListener("click", () => {
         map.setView(chg.latlng, 16);
@@ -592,7 +592,7 @@ function updateOfflineListPanel() {
     }
 
     if (window.offlinePmList?.has(String(chg.id))) {
-      li.className = "offline-item";
+      //li.className = "offline-item";
       const li = document.createElement("li");
       li.innerHTML = `${chg.name} <span class="status-fail">Offline</span>`;
       li.addEventListener("click", () => {
